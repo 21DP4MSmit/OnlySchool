@@ -20,6 +20,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phoneNumber'
     ];
 
     /**
@@ -43,5 +44,14 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    public function marks()
+    {
+        return $this->hasMany(Mark::class, 'UserID');
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'UserID');
     }
 }
