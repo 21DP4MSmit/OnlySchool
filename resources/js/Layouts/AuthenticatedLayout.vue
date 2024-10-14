@@ -19,7 +19,6 @@ const showingNavigationDropdown = ref(false);
                         <div class="flex">
                             <!-- Logo and School Name -->
                             <div class="flex shrink-0 items-center">
-                                <ApplicationLogo class="block h-9 w-auto fill-current text-white" />
                                 <h1 class="text-2xl font-bold ms-3">OnlySchool</h1>
                             </div>
 
