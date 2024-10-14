@@ -12,8 +12,6 @@ services:
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - laravel
-    command: >
-      sh -c "until php artisan migrate; do sleep 5; done"
 
   nginx:
     image: nginx:latest
