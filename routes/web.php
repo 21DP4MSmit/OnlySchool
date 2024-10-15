@@ -22,4 +22,8 @@ Route::get('/student-dashboard', function () {
     return Inertia::render('StudentDashboardPage');
 })->name('student.dashboard');
 
+Route::get('/dienasgramata', function () {
+    return Inertia::render('Dienasgramata');
+})->name('dienasgramata');
+
 require __DIR__.'/auth.php';
