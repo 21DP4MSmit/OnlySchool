@@ -1,7 +1,6 @@
 <template>
   <AuthenticatedLayout>
-    <div class="student-dashboard">
-      <!-- Pass the inherited data to the StudentDashboard component -->
+    <div class="student-dashboard-page">
       <StudentDashboard :currentDate="currentDate" :currentTime="currentTime" :student="student" />
     </div>
   </AuthenticatedLayout>
@@ -9,22 +8,54 @@
 
 <script>
 import StudentDashboard from '@/Components/StudentDashboard.vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 export default {
   components: {
     StudentDashboard,
-  },
-  computed: {
-    // Assume that the AuthenticatedLayout provides the 'student' object with name and class
-    student() {
-      return this.$attrs.student || { name: 'Unknown', class: 'Unknown' }; // Fallback if no data is provided
-    },
+    AuthenticatedLayout,
   },
   data() {
     return {
-      currentDate: new Date().toLocaleDateString(),
-      currentTime: new Date().toLocaleTimeString(),
+      currentDate: new Date().toLocaleDateString('lv-LV', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+      }),
+      currentTime: new Date().toLocaleTimeString('lv-LV', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      }),
+      student: {
+        name: 'Džonis',
+        class: '5.B',
+      },
     };
+  },
+  mounted() {
+    setInterval(() => {
+      const now = new Date();
+      this.currentDate = now.toLocaleDateString('lv-LV', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+      });
+      this.currentTime = now.toLocaleTimeString('lv-LV', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      });
+    }, 1000);
   },
 };
 </script>
+
+<style scoped>
+.student-dashboard-page {
+  background-color: #f0f0f0;
+  padding: 20px;
+}
+</style>
