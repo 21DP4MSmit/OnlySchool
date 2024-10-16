@@ -26,4 +26,17 @@ Route::get('/dienasgramata', function () {
     return Inertia::render('Dienasgramata');
 })->name('dienasgramata');
 
+Route::get('/TeacherDashboard', function () {
+    return Inertia::render('TeacherDashboard');
+});
+
+Route::get('/TeacherAbsences', function () {
+    return Inertia::render('TeacherAbsences');
+});
+
+Route::get('/TeacherClasses', function () {
+    return Inertia::render('TeacherClasses');
+});
+
+
 require __DIR__.'/auth.php';
