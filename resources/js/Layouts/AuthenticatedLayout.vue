@@ -1,71 +1,61 @@
-<script setup>
-import { ref } from 'vue';
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
-import NavLink from '@/Components/NavLink.vue';
-import { Link } from '@inertiajs/vue3';
-
-const showingNavigationDropdown = ref(false);
-</script>
-
 <template>
     <div>
         <div class="min-h-screen bg-gray-100">
-            <nav class="border-b border-gray-100 bg-blue-600 text-white">
+            <nav class="bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-lg py-4 px-6 relative">
+                <!-- Pattern Background -->
+                <div class="absolute inset-0 opacity-30" style="background-image: linear-gradient(60deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.1) 75%), linear-gradient(60deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.1) 75%); background-size: 15px 15px;"></div>
+
                 <!-- Primary Navigation Menu -->
-                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div class="flex h-16 justify-between items-center">
-                        <div class="flex">
+                <div class="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
                             <!-- Logo and School Name -->
-                            <div class="flex shrink-0 items-center">
-                                <ApplicationLogo class="block h-9 w-auto fill-current text-white" />
-                                <h1 class="text-2xl font-bold ms-3">OnlySchool</h1>
-                            </div>
+                            <a :href="route('dashboard')" class="flex items-center cursor-pointer">
+                                <ApplicationLogo class="block h-10 w-auto fill-current text-white" />
+                                <h1 class="text-3xl font-bold ms-3 leading-7">OnlySchool</h1>
+                            </a>
 
                             <!-- Navigation Links -->
-                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('dashboard')" class="text-white">
+                            <div class="hidden space-x-8 sm:flex sm:ms-10">
+                                <NavLink :href="route('dashboard')" class="text-white hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
                                     Sākums
                                 </NavLink>
-                                <NavLink :href="route('dienasgramata')" class="text-white">
+                                <NavLink :href="route('dienasgramata')" class="text-white hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
                                     Dienasgrāmata
                                 </NavLink>
-                                <NavLink href="#" class="text-white">
+                                <NavLink href="#" class="text-white hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
                                     Kavējumi
                                 </NavLink>
-                                <NavLink href="#" class="text-white">
+                                <NavLink href="#" class="text-white hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
                                     Atzīmes
                                 </NavLink>
-                                <NavLink href="#" class="text-white">
+                                <NavLink href="#" class="text-white hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
                                     Jaunumi
                                 </NavLink>
-                                <NavLink href="#" class="text-white relative">
-                                    Vēstules 
-                                    <span class="absolute right-0 top-0 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-xs font-bold">+99</span>
+                                <NavLink href="#" class="text-white relative hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
+                                    Vēstules
+                                    <span class="absolute right-0 top-0 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-xs font-bold text-white">+99</span>
                                 </NavLink>
                             </div>
                         </div>
 
                         <!-- User Greeting and Profile Section -->
-                        <div class="flex items-center space-x-4">
+                        <div class="flex items-center space-x-6">
                             <p class="text-lg">Sveiks, {{ $page.props.auth.user.name }}!</p>
                             <!-- Profile Picture -->
-                            <img src="/path-to-profile-picture.jpg" alt="Profile" class="h-10 w-10 rounded-full" />
+                            <img src="/path-to-profile-picture.jpg" alt="Profile" class="h-10 w-10 rounded-full border-2 border-white shadow-md" />
                             <!-- Settings Dropdown -->
                             <div class="relative">
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
-                                        <span class="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                class="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium leading-4 text-white transition duration-150 ease-in-out hover:bg-blue-700 focus:outline-none"
-                                            >
-                                                <svg class="-me-0.5 ms-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                                </svg>
-                                            </button>
-                                        </span>
+                                        <button
+                                            type="button"
+                                            class="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium leading-4 text-white transition duration-150 ease-in-out hover:bg-blue-700 focus:outline-none"
+                                        >
+                                            <svg class="-me-0.5 ms-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                            </svg>
+                                        </button>
                                     </template>
 
                                     <template #content>
@@ -93,3 +83,14 @@ const showingNavigationDropdown = ref(false);
         </div>
     </div>
 </template>
+
+<script setup>
+import { ref } from 'vue';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import Dropdown from '@/Components/Dropdown.vue';
+import DropdownLink from '@/Components/DropdownLink.vue';
+import NavLink from '@/Components/NavLink.vue';
+import { Link } from '@inertiajs/vue3';
+
+const showingNavigationDropdown = ref(false);
+</script>
