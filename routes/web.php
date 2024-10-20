@@ -14,6 +14,19 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dienasgramata', function () {
+    return Inertia::render('Dienasgramata');
+})->middleware(['auth', 'verified']);
+Route::get('/kavejumi', function () {
+    return Inertia::render('Kavejumi');
+})->middleware(['auth', 'verified']);
+Route::get('/atzimes', function () {
+    return Inertia::render('Atzimes');
+})->middleware(['auth', 'verified']);
+Route::get('/vestules', function () {
+    return Inertia::render('Vestules');
+})->middleware(['auth', 'verified']);
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -27,13 +40,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/table-manager/data/{table}', [TableController::class, 'fetchData'])->name('table.data');
 });
 
-Route::get('/test', function () {
-    return Inertia::render('test');
-});
-
-Route::get('/dienasgramata', function () {
-    return Inertia::render('Dienasgramata');
-});
 
 Route::get('/TeacherDashboard', function () {
     return Inertia::render('TeacherDashboard')->name('TeachBoard');

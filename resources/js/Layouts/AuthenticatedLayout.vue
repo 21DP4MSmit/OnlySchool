@@ -19,16 +19,13 @@
                                 <Link href="/dienasgramata" class="text-white hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
                                     Dienasgrāmata
                                 </Link>
-                                <Link href="#" class="text-white hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
+                                <Link href="/kavejumi" class="text-white hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
                                     Kavējumi
                                 </Link>
-                                <Link href="#" class="text-white hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
+                                <Link href="/atzimes" class="text-white hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
                                     Atzīmes
                                 </Link>
-                                <Link href="#" class="text-white hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
-                                    Jaunumi
-                                </Link>
-                                <Link href="#" class="text-white relative hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
+                                <Link href="/vestules" class="text-white relative hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
                                     Vēstules
                                     <span class="absolute right-0 top-0 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-xs font-bold text-white">+99</span>
                                 </Link>
