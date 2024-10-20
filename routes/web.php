@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Inertia\Response;
 
 Route::get('/', function () {
     return Inertia::render('Auth/Login');
@@ -18,13 +19,20 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-Route::get('/student-dashboard', function () {
-    return Inertia::render('StudentDashboardPage');
-})->name('student.dashboard');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/table-manager', [TableController::class, 'index'])->name('table.manager');
+    Route::post('/table-manager/insert', [TableController::class, 'insert'])->name('table.insert');
+    Route::get('/table-manager/data/{table}', [TableController::class, 'fetchData'])->name('table.data');
+});
+
+Route::get('/test', function () {
+    return Inertia::render('test');
+});
 
 Route::get('/dienasgramata', function () {
     return Inertia::render('Dienasgramata');
-})->name('dienasgramata');
+});
 
 Route::get('/TeacherDashboard', function () {
     return Inertia::render('TeacherDashboard');

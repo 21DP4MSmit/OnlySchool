@@ -15,12 +15,6 @@
 
       <!-- Student Information -->
       <div class="right-section">
-        <!-- Student Info -->
-        <div class="student-info">
-          <img class="profile-pic" src="https://facts.net/wp-content/uploads/2023/10/22-astounding-facts-about-johnny-sins-1696433310.jpg" alt="Student Picture" />
-          <h2>Sveiks, {{ student.name }}!</h2>
-          <p>{{ student.class }}</p>
-        </div>
 
         <!-- Logbook Entries -->
         <div class="logbook">

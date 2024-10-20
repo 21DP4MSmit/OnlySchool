@@ -41,7 +41,7 @@
 
                         <!-- User Greeting and Profile Section -->
                         <div class="flex items-center space-x-6">
-                            <p class="text-lg">Sveiks, {{ $page.props.auth.user.name }}!</p>
+                            <p class="text-lg">{{ $page.props.auth.user.name }}!</p>
                             <!-- Profile Picture -->
                             <img src="/path-to-profile-picture.jpg" alt="Profile" class="h-10 w-10 rounded-full border-2 border-white shadow-md" />
                             <!-- Settings Dropdown -->
