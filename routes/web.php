@@ -31,9 +31,9 @@ Route::get('/test', function () {
     return Inertia::render('test');
 });
 
-// Route::get('/dienasgramata', function () {
-//     return Inertia::render('Dienasgramata')->name('dienasgramata');
-// });
+Route::get('/dienasgramata', function () {
+    return Inertia::render('Dienasgramata');
+});
 
 Route::get('/TeacherDashboard', function () {
     return Inertia::render('TeacherDashboard')->name('TeachBoard');
