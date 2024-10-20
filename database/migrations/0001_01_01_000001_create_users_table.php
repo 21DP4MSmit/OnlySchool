@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -20,6 +21,7 @@ return new class extends Migration
             $table->string('profilePicturePath')->nullable();
             $table->integer('userType')->nullable();
             $table->string('phoneNumber')->nullable();
+            $table->foreignId('class_id')->nullable()->constrained('klase', 'ClassID')->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
         });

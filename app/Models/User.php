@@ -21,7 +21,8 @@ class User extends Authenticatable
         'email',
         'password',
         'phoneNumber',
-        'profilePicturePatch'
+        'class_id',
+        'profilePicturePath'
     ];
 
     /**

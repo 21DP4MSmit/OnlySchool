@@ -13,7 +13,6 @@ class Klase extends Model
 
     protected $fillable = [
         'className',
-        'userID',
     ];
 
     // Relationships

@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -9,8 +10,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('klase', function (Blueprint $table) {
-            $table->id('ClassID'); // ClassID is now the primary key
-            $table->foreignId('UserID')->constrained('users')->onDelete('cascade');
+            $table->id('ClassID');
             $table->string('Department');
             $table->timestamps();
         });

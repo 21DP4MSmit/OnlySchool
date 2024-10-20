@@ -43,7 +43,7 @@ class ProfileController extends Controller
             $path = $request->file('profile_picture')->store('private', 'local');
 
             // Save the path in the database
-            $user->profile_picture_path = $path;
+            $user->profilePicturePath = $path;
         }
 
         // Save the user
