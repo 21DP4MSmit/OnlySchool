@@ -74,12 +74,21 @@ const fetchTableData = async () => {
 };
 
 const insertData = async () => {
-    await axios.post("/table-manager/insert", {
-        table: selectedTable.value,
-        ...formData,
-    });
-    fetchTableData(); // Refresh table data
+    try {
+        const response = await axios.post("/table-manager/insert", {
+            table: selectedTable.value,
+            ...formData, // Ensure this is an object and matches the expected structure
+        });
+        fetchTableData(); // Refresh table data
+        console.log(response.data);
+    } catch (error) {
+        console.error('Error inserting data:', error);
+        alert('Failed to insert data: ' + (error.response?.data?.message || error.message));
+    }
 };
+
+
+
 
 watch(selectedTable, () => {
     formData.value = {};

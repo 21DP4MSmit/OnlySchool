@@ -29,13 +29,36 @@ class TableController extends Controller
 
     public function insert(Request $request)
     {
+        $request->validate([
+            'table' => 'required|string',
+            // Add validation rules for your table fields
+        ]);
+    
         $table = $request->input('table');
         $data = $request->except(['table', '_token']);
-
-        // Insert data into the selected table
-        DB::table($table)->insert($data);
-
-        return back()->with('success', 'Data inserted successfully!');
+    
+        // Log the incoming data to see its structure
+        \Log::info('Data being inserted:', $data);
+    
+        // Check if $data is an array
+        if (!is_array($data)) {
+            return response()->json(['message' => 'Invalid data format.'], 400);
+        }
+    
+        try {
+            // Insert data into the selected table
+            DB::table($table)->insert($data);
+            return response()->json(['message' => 'Data inserted successfully!']);
+        } catch (\Exception $e) {
+            // Log the error for further analysis
+            \Log::error('Insert failed:', [
+                'error' => $e->getMessage(),
+                'data' => $data,
+            ]);
+            return response()->json(['message' => 'Failed to insert data: ' . $e->getMessage()], 500);
+        }
     }
+    
+    
 }
 
