@@ -14,9 +14,9 @@ class TableController extends Controller
         // Fetch all table names from the database
         $tables = DB::select('SHOW TABLES');
         $tableNames = array_map(fn($table) => array_values((array)$table)[0], $tables);
-        // return Inertia::render('TableManager', [
-        //     'tables' => $tableNames,
-        // ]);
+        return Inertia::render('TableManager', [
+            'tables' => $tableNames,
+        ]);
     }
 
     public function fetchData($table)

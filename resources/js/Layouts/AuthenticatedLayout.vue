@@ -20,7 +20,7 @@
                                 <NavLink :href="route('dashboard')" class="text-white hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
                                     Sākums
                                 </NavLink>
-                                <NavLink :href="route('dienasgramata')" class="text-white hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
+                                <NavLink href="#" class="text-white hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
                                     Dienasgrāmata
                                 </NavLink>
                                 <NavLink href="#" class="text-white hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TableController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,12 +31,12 @@ Route::get('/test', function () {
     return Inertia::render('test');
 });
 
-Route::get('/dienasgramata', function () {
-    return Inertia::render('Dienasgramata');
-});
+// Route::get('/dienasgramata', function () {
+//     return Inertia::render('Dienasgramata')->name('dienasgramata');
+// });
 
 Route::get('/TeacherDashboard', function () {
-    return Inertia::render('TeacherDashboard');
+    return Inertia::render('TeacherDashboard')->name('TeachBoard');
 });
 
 Route::get('/TeacherAbsences', function () {
