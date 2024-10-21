@@ -6,6 +6,9 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 
+// Import the AuthenticatedLayout component globally
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+
 const appName = import.meta.env.VITE_APP_NAME;
 
 createInertiaApp({
@@ -16,7 +19,12 @@ createInertiaApp({
             import.meta.glob('./Pages/**/*.vue'),
         ),
     setup({ el, App, props, plugin }) {
-        return createApp({ render: () => h(App, props) })
+        const app = createApp({ render: () => h(App, props) });
+
+        // Register AuthenticatedLayout globally
+        app.component('AuthenticatedLayout', AuthenticatedLayout);
+
+        return app
             .use(plugin)
             .use(ZiggyVue)
             .mount(el);

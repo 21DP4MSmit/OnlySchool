@@ -5,15 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Message extends Model
+class Participant extends Model
 {
-    protected $fillable = ['conversation_id', 'user_id', 'text', 'is_read'];
+    protected $fillable = ['conversation_id', 'user_id'];
 
-    public function conversation() {
+    public function conversation()
+    {
         return $this->belongsTo(Conversation::class);
     }
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 }

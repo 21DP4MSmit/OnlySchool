@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TableController;
+use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\MessageController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -38,6 +40,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/table-manager', [TableController::class, 'index'])->name('table.manager');
     Route::post('/table-manager/insert', [TableController::class, 'insert'])->name('table.insert');
     Route::get('/table-manager/data/{table}', [TableController::class, 'fetchData'])->name('table.data');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('conversations', ConversationController::class);
+    Route::post('conversations/{conversation}/messages', [MessageController::class, 'store'])->name('messages.store');
+    Route::post('messages/{message}/read', [MessageController::class, 'markAsRead'])->name('messages.read');
 });
 
 
