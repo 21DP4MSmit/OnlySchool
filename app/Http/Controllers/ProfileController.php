@@ -36,11 +36,6 @@ class ProfileController extends Controller
             $user->email_verified_at = null;
         }
 
-        if ($request->hasFile('profile_picture')) {
-            $path = $request->file('profile_picture')->store('private', 'local');
-            $user->profilePicturePath = $path;
-        }
-
         $user->save();
 
         return Redirect::route('profile.edit')->with('success', 'Profile updated successfully.');
@@ -65,5 +60,25 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    public function updateProfilePicture(Request $request)
+    {
+        $request->validate([
+            'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:51200',
+        ]);
+    
+        $user = Auth::user();
+    
+        if ($user->profilePicturePath) {
+            Storage::delete($user->profilePicturePath); // Delete old profile picture
+        }
+    
+        // Store the new profile picture
+        $path = $request->file('profile_picture')->store('profile_pictures');
+    
+        $user->update(['profilePicturePath' => $path]); // Save new picture path
+    
+        return back()->with('status', 'Profile picture updated!');
     }
 }

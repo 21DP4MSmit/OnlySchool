@@ -19,14 +19,8 @@ const user = usePage().props.auth.user;
 const form = useForm({
     email: user.email,
     phoneNumber: user.phoneNumber,
-    profile_picture: null, // Initialize the file input
 });
 
-// Handle file upload
-const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    form.setData('profile_picture', file); // Set the file in form data
-};
 </script>
 
 <template>
@@ -88,18 +82,6 @@ const handleFileUpload = (event) => {
                     autocomplete="tel"
                 />
                 <InputError class="mt-2" :message="form.errors.phoneNumber" />
-            </div>
-
-            <div>
-                <InputLabel for="profile_picture" value="Profila bilde" />
-                <input 
-                    type="file" 
-                    id="profile_picture" 
-                    class="mt-1 block w-full" 
-                    @change="handleFileUpload" 
-                    accept="image/*"
-                />
-                <InputError class="mt-2" :message="form.errors.profile_picture" />
             </div>
 
             <div v-if="mustVerifyEmail && user.email_verified_at === null">

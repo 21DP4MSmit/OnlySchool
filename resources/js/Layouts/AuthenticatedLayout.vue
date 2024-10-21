@@ -34,7 +34,7 @@
 
                         <div class="flex items-center space-x-6">
                             <p class="text-lg">{{ $page.props.auth.user.name }}!</p>
-                            <img src="/path-to-profile-picture.jpg" alt="Profile" class="h-10 w-10 rounded-full border-2 border-white shadow-md" />
+                            <img src="`/storage/${user.profilePicturePath}`" alt="Profile" class="h-10 w-10 rounded-full border-2 border-white shadow-md" />
                             <div class="relative">
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
