@@ -32,21 +32,15 @@ class ProfileController extends Controller
         $user = $request->user();
         $user->fill($request->validated());
 
-        // Check if email is dirty and set verification date to null
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
 
-        // Handle profile picture upload
         if ($request->hasFile('profile_picture')) {
-            // Store the image in the 'private' directory
             $path = $request->file('profile_picture')->store('private', 'local');
-
-            // Save the path in the database
             $user->profilePicturePath = $path;
         }
 
-        // Save the user
         $user->save();
 
         return Redirect::route('profile.edit')->with('success', 'Profile updated successfully.');

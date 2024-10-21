@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('profilePicturePath')->nullable();
-            $table->integer('userType')->nullable();
+            $table->enum('role', ['user', 'admin'])->default('user');
             $table->string('phoneNumber')->nullable();
             $table->foreignId('class_id')->nullable()->constrained('klase', 'ClassID')->onDelete('cascade');
             $table->rememberToken();
