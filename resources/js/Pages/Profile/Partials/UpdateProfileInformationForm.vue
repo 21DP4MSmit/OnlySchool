@@ -17,50 +17,51 @@ defineProps({
 const user = usePage().props.auth.user;
 
 const form = useForm({
-    name: user.name,
     email: user.email,
-    profile_picture: null, // Initialize the file input
+    phoneNumber: user.phoneNumber,
 });
 
-// Handle file upload
-const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    form.setData('profile_picture', file); // Set the file in form data
-};
 </script>
 
 <template>
     <section>
         <header>
             <h2 class="text-lg font-medium text-gray-900">
-                Profile Information
+                Profila Informācija
             </h2>
 
             <p class="mt-1 text-sm text-gray-600">
-                Update your account's profile information and email address.
-            </p>
+                Atjauniniet sava profila informāciju            </p>
         </header>
 
         <form
             @submit.prevent="form.patch(route('profile.update'))"
             class="mt-6 space-y-6"
         >
+
             <div>
-                <InputLabel for="name" value="Name" />
-                <TextInput
-                    id="name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.name"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
+                <InputLabel for="name" value="Vārds" />
+                <div 
+                    id="name" 
+                    class="mt-1 block w-full disabled border border-gray-300 rounded-md p-2 bg-gray-100" 
+                    v-text="user.name"
+                    role="presentation"
+                ></div>
+                <InputError class="mt-2" :message="form.errors.name" />
+            </div>
+            <div>
+                <InputLabel for="class" value="Klase" />
+                <div 
+                    id="name" 
+                    class="mt-1 block w-full disabled border border-gray-300 rounded-md p-2 bg-gray-100" 
+                    v-text="user.class_id"
+                    role="presentation"
+                ></div>
                 <InputError class="mt-2" :message="form.errors.name" />
             </div>
 
             <div>
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="email" value="E-pasts" />
                 <TextInput
                     id="email"
                     type="email"
@@ -71,17 +72,16 @@ const handleFileUpload = (event) => {
                 />
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
-
             <div>
-                <InputLabel for="profile_picture" value="Profile Picture" />
-                <input 
-                    type="file" 
-                    id="profile_picture" 
-                    class="mt-1 block w-full" 
-                    @change="handleFileUpload" 
-                    accept="image/*"
+                <InputLabel for="phoneNumber" value="Tālruņa numurs" />
+                <TextInput
+                    id="phoneNumber"
+                    class="mt-1 block w-full"
+                    v-model="form.phoneNumber"
+                    required
+                    autocomplete="tel"
                 />
-                <InputError class="mt-2" :message="form.errors.profile_picture" />
+                <InputError class="mt-2" :message="form.errors.phoneNumber" />
             </div>
 
             <div v-if="mustVerifyEmail && user.email_verified_at === null">
@@ -106,7 +106,7 @@ const handleFileUpload = (event) => {
             </div>
 
             <div class="flex items-center gap-4">
-                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
+                <PrimaryButton :disabled="form.processing">Saglabāt</PrimaryButton>
 
                 <Transition
                     enter-active-class="transition ease-in-out"
@@ -114,12 +114,8 @@ const handleFileUpload = (event) => {
                     leave-active-class="transition ease-in-out"
                     leave-to-class="opacity-0"
                 >
-                    <p
-                        v-if="form.recentlySuccessful"
-                        class="text-sm text-gray-600"
-                    >
-                        Saved.
-                    </p>
+                    <p v-if="form.recentlySuccessful" class="text-sm text-gray-600">Saglabāts!</p>
+                    <p v-else-if="form.processing" class="text-sm text-gray-600">Sūta...</p>
                 </Transition>
             </div>
         </form>
