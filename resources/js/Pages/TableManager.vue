@@ -11,27 +11,36 @@
         </select>
 
         <!-- Show Table Data -->
-        <div v-if="tableData.length">
+        <div v-if="selectedTable">
             <h2 class="text-xl font-semibold mt-6">Table Data ({{ selectedTable }})</h2>
-            <table class="table-auto w-full mt-4 border-collapse border border-gray-300">
-                <thead>
-                    <tr>
-                        <th v-for="(value, key) in tableData[0]" :key="key" class="border p-2">
-                            {{ key }}
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="row in tableData" :key="row.id">
-                        <td v-for="(value, key) in row" :key="key" class="border p-2">
-                            {{ value }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+
+            <!-- Check if there is data in the table -->
+            <div v-if="tableData.length">
+                <table class="table-auto w-full mt-4 border-collapse border border-gray-300">
+                    <thead>
+                        <tr>
+                            <th v-for="(value, key) in tableData[0]" :key="key" class="border p-2">
+                                {{ key }}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="row in tableData" :key="row.id">
+                            <td v-for="(value, key) in row" :key="key" class="border p-2">
+                                {{ value }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- If no data in the table, show this message -->
+            <div v-else>
+                <p class="mt-4 text-gray-500">No data available in this table.</p>
+            </div>
         </div>
 
-        <!-- Insert Data -->
+        <!-- Insert Data Form (Always visible if a table is selected) -->
         <div v-if="selectedTable" class="mt-8">
             <h2 class="text-xl font-semibold">Insert Data into {{ selectedTable }}</h2>
             <form @submit.prevent="insertData">
@@ -69,6 +78,10 @@ const fetchTableData = async () => {
             // Dynamically set form fields based on table data
             formFields.value = Object.keys(response.data[0]);
             formFields.value = formFields.value.filter(field => !['id', 'created_at', 'updated_at'].includes(field));
+        } else {
+            // If no data, try to get table structure and show form fields
+            const tableStructure = await axios.get(`/table-manager/structure/${selectedTable.value}`);
+            formFields.value = tableStructure.data.fields;
         }
     }
 };
@@ -77,9 +90,10 @@ const insertData = async () => {
     try {
         const response = await axios.post("/table-manager/insert", {
             table: selectedTable.value,
-            ...formData, // Ensure this is an object and matches the expected structure
+            formData: { ...formData }, // Spread formData to ensure it's an object
         });
-        fetchTableData(); // Refresh table data
+        // Refresh table data after inserting new data
+        fetchTableData(); 
         console.log(response.data);
     } catch (error) {
         console.error('Error inserting data:', error);
@@ -87,10 +101,8 @@ const insertData = async () => {
     }
 };
 
-
-
-
+// Reset formData when table is changed
 watch(selectedTable, () => {
-    formData.value = {};
+    Object.keys(formData).forEach(key => delete formData[key]);
 });
 </script>

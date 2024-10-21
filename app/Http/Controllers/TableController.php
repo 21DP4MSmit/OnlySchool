@@ -31,16 +31,15 @@ class TableController extends Controller
     {
         $request->validate([
             'table' => 'required|string',
-            // Add validation rules for your table fields
         ]);
     
         $table = $request->input('table');
         $data = $request->except(['table', '_token']);
     
-        // Log the incoming data to see its structure
-        \Log::info('Data being inserted:', $data);
+        // Log to confirm what kind of data is coming in
+        \Log::info('Data being inserted:', ['data' => $data]);
     
-        // Check if $data is an array
+        // Ensure data is an array
         if (!is_array($data)) {
             return response()->json(['message' => 'Invalid data format.'], 400);
         }
@@ -50,7 +49,6 @@ class TableController extends Controller
             DB::table($table)->insert($data);
             return response()->json(['message' => 'Data inserted successfully!']);
         } catch (\Exception $e) {
-            // Log the error for further analysis
             \Log::error('Insert failed:', [
                 'error' => $e->getMessage(),
                 'data' => $data,
@@ -58,6 +56,7 @@ class TableController extends Controller
             return response()->json(['message' => 'Failed to insert data: ' . $e->getMessage()], 500);
         }
     }
+    
     
     
 }
