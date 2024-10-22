@@ -64,6 +64,7 @@ Route::middleware('auth')->group(function () {
         
         Route::resource('conversations', ConversationController::class);
         Route::post('conversations/{conversation}/messages', [MessageController::class, 'store'])->name('messages.store');
+        Route::post('/conversations/leave', [ConversationController::class, 'leave'])->name('conversations.leave');
         Route::post('messages/{message}/read', [MessageController::class, 'markAsRead'])->name('messages.read');
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
