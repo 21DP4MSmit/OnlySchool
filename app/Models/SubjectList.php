@@ -9,21 +9,32 @@ class SubjectList extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'SubjectListID';
-
     protected $fillable = [
-        'SubjectID',
-        'ClassID',
+        'ClassID', 'SubjectID', 'ClassroomID', 'Date', 'homework', 'topic'
     ];
 
-    // Relationships
     public function subject()
     {
-        return $this->belongsTo(Subject::class, 'SubjectID');
+        return $this->belongsTo(Subject::class, 'SubjectID', 'SubjectID');
     }
 
-    public function class()
+    public function classroom()
     {
-        return $this->belongsTo(Klase::class, 'ClassID');
+        return $this->belongsTo(Classroom::class, 'ClassroomID', 'id');
+    }
+
+    public function marks()
+    {
+        return $this->hasMany(Mark::class, 'SubjectID', 'SubjectID')
+                    ->where('UserID', auth()->id());
+    }
+
+    public function absences()
+    {
+        return $this->hasMany(Absence::class, 'SubjectID', 'SubjectID')
+                    ->where('UserID', auth()->id());
     }
 }
+
+
+

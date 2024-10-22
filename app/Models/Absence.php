@@ -9,17 +9,10 @@ class Absence extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'AbsenceID';
+    protected $fillable = ['UserID', 'SubjectID', 'Absence', 'date'];
 
-    protected $fillable = [
-        'absenceDate',
-        'reason',
-        'UserID',
-    ];
-
-    // Relationships
-    public function user()
+    public function subjectList()
     {
-        return $this->belongsTo(User::class, 'UserID');
+        return $this->belongsTo(SubjectList::class, 'SubjectID', 'SubjectID');
     }
 }

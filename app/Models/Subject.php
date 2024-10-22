@@ -9,20 +9,10 @@ class Subject extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'SubjectID';
+    protected $fillable = ['Name'];
 
-    protected $fillable = [
-        'subjectName',
-    ];
-
-    // Relationships
-    public function subjectList()
+    public function subjectLists()
     {
         return $this->hasMany(SubjectList::class, 'SubjectID');
-    }
-
-    public function marks()
-    {
-        return $this->hasMany(Mark::class, 'SubjectID');
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DienasgramataController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\ConversationController;
@@ -50,9 +51,7 @@ Route::middleware('auth')->group(function () {
             return Inertia::render('Dashboard');
         })->name('dashboard');
 
-        Route::get('/dienasgramata', function () {
-            return Inertia::render('Dienasgramata');
-        })->name('dienasgramata');
+        Route::get('/dienasgramata', [DienasgramataController::class, 'index'])->name('dienasgramata.index');
 
         Route::get('/kavejumi', function () {
             return Inertia::render('Kavejumi');
@@ -72,6 +71,10 @@ Route::middleware('auth')->group(function () {
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');      
 
         Route::post('/profile-picture', [ProfileController::class, 'updateProfilePicture'])->name('profile.picture.update');
+
+        
+
+        
 
 
     });

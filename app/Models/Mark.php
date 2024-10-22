@@ -9,23 +9,11 @@ class Mark extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'MarkID';
+    protected $fillable = ['UserID', 'SubjectID', 'mark', 'date'];
 
-    protected $fillable = [
-        'Mark',
-        'UserID',
-        'SubjectID',
-        'created_at',
-    ];
-
-    // relācijas
-    public function user()
+    public function subjectList()
     {
-        return $this->belongsTo(User::class, 'UserID');
-    }
-
-    public function subject()
-    {
-        return $this->belongsTo(Subject::class, 'SubjectID');
+        return $this->belongsTo(SubjectList::class, 'SubjectID', 'SubjectID');
     }
 }
+

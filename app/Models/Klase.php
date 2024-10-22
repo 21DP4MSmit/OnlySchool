@@ -9,20 +9,15 @@ class Klase extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'ClassID';
+    protected $fillable = ['Department'];
 
-    protected $fillable = [
-        'className',
-    ];
-
-    // Relationships
-    public function teacher()
+    public function subjectLists()
     {
-        return $this->belongsTo(User::class, 'userID');
+        return $this->hasMany(SubjectList::class, 'ClassID');
     }
 
-    public function classrooms()
+    public function users()
     {
-        return $this->hasMany(Classroom::class, 'ClassID');
+        return $this->hasMany(User::class, 'class_id');
     }
 }
