@@ -9,21 +9,34 @@ use Carbon\Carbon;
 
 class DienasgramataController extends Controller
 {
-    public function index()
+    
+
+    public function index(Request $request)
 {
+    // Get the user's class ID
     $classId = Auth::user()->class_id;
 
-    // Fetch subject lists for the current week for the user's class (from Monday to Friday)
+    // If a week start date is provided, use it, else use the current week
+    $weekStart = $request->input('weekStart') 
+                ? Carbon::parse($request->input('weekStart'))
+                : Carbon::now()->startOfWeek(Carbon::MONDAY);
+    
+    // Set the end of the week (Friday)
+    $weekEnd = $weekStart->copy()->endOfWeek(Carbon::FRIDAY);
+    
+    // Fetch subject lists for the specified week
     $subjectLists = SubjectList::where('ClassID', $classId)
-                        ->whereBetween('Date', [now()->startOfWeek(Carbon::MONDAY), now()->endOfWeek(Carbon::FRIDAY)])
-                        ->with(['subject', 'classroom', 'marks', 'absences'])
-                        ->orderBy('Date', 'asc') // Order by date ascending
+                        ->whereBetween('Date', [$weekStart, $weekEnd])
+                        ->with('subject', 'classroom', 'marks', 'absences')
                         ->get();
 
     return inertia('Dienasgramata/Index', [
-        'subjectLists' => $subjectLists
+        'subjectLists' => $subjectLists,
+        'weekStart' => $weekStart->toDateString(), // Pass weekStart back to the frontend
     ]);
 }
+    
+
 
 
 }
