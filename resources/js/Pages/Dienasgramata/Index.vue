@@ -1,27 +1,34 @@
 <template>
     <AuthenticatedLayout>
       <div class="container mx-auto px-4 py-8">
-        <div class="flex justify-between items-center mb-6">
-          <h1 class="text-4xl font-extrabold text-gray-800">Dienasgrāmata</h1>
-          <!-- Top-right corner date display -->
-          <span class="text-lg font-semibold text-gray-600">
+        <!-- Page Header -->
+        <div class="flex justify-between items-center mb-8">
+          <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight leading-tight">Dienasgrāmata</h1>
+          <span class="text-lg font-semibold text-gray-600 bg-gray-200 py-2 px-4 rounded-lg shadow-sm">
             {{ currentDate }} (Šodien)
           </span>
         </div>
   
-        <!-- Week navigation buttons -->
-        <div class="flex justify-between items-center mb-6">
-          <button @click="prevWeek" class="text-blue-600 hover:underline text-4xl font-extrabold">&lt;</button>
-          <span class="text-lg font-semibold">{{ formattedWeekRange }}</span>
-          <button @click="nextWeek" class="text-blue-600 hover:underline text-4xl font-extrabold">&gt;</button>
+        <!-- Week Navigation -->
+        <div class="flex justify-between items-center mb-8">
+          <button @click="prevWeek" class="text-4xl text-blue-600 hover:text-blue-700 transition transform hover:scale-105 font-bold">
+            &lt;
+          </button>
+          <span class="text-lg font-semibold bg-blue-100 py-2 px-6 rounded-lg shadow-sm">
+            {{ formattedWeekRange }}
+          </span>
+          <button @click="nextWeek" class="text-4xl text-blue-600 hover:text-blue-700 transition transform hover:scale-105 font-bold">
+            &gt;
+          </button>
         </div>
   
-        <div v-for="(subjectLists, day) in weekdays" :key="day" class="mb-10">
-          <h2 class="text-2xl font-semibold text-gray-700 mb-4">{{ day }}</h2>
+        <!-- Subject Lists by Day -->
+        <div v-for="(subjectLists, day) in weekdays" :key="day" class="mb-12">
+          <h2 class="text-3xl font-semibold text-gray-800 mb-6">{{ day }}</h2>
   
           <div v-if="subjectLists.length" class="overflow-hidden shadow-lg rounded-lg">
-            <table class="min-w-full table-fixed bg-white rounded-lg border-collapse">
-              <thead class="bg-gradient-to-r from-blue-500 to-blue-700 text-white uppercase text-sm leading-normal">
+            <table class="min-w-full bg-white rounded-lg border-collapse">
+              <thead class="bg-gradient-to-r from-blue-500 to-blue-700 text-white uppercase text-sm font-semibold">
                 <tr>
                   <th class="w-1/12 py-4 px-6 text-left">#</th>
                   <th class="w-1/12 py-4 px-6 text-left">Laiks</th>
@@ -32,32 +39,32 @@
                   <th class="w-1/6 py-4 px-6 text-left">Atzīmes</th>
                 </tr>
               </thead>
-              <tbody class="text-gray-700 text-sm font-light">
-                <tr v-for="(subjectList, index) in subjectLists" :key="subjectList.ListID" class="border-b border-gray-200 hover:bg-gray-100 odd:bg-gray-50">
-                  <td class="py-4 px-6 text-left">{{ index + 1 }}</td>
-                  <td class="py-4 px-6 text-left">{{ getTimeForLesson(index) }}</td>
-                  <td class="py-4 px-6 text-left break-words whitespace-normal">
+              <tbody class="text-gray-700 text-sm">
+                <tr
+                  v-for="(subjectList, index) in subjectLists"
+                  :key="subjectList.ListID"
+                  class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out"
+                >
+                  <td class="py-4 px-6">{{ index + 1 }}</td>
+                  <td class="py-4 px-6">{{ getTimeForLesson(index) }}</td>
+                  <td class="py-4 px-6">
                     <span class="font-bold text-blue-600">{{ subjectList.subject.Name }}</span><br>
                     <span class="text-gray-500">Klase: {{ subjectList.classroom.Classroom }}</span>
                   </td>
-                  <td class="py-4 px-6 text-left break-words whitespace-normal truncate max-w-xs">{{ subjectList.topic || 'Tēma nav pieejama' }}</td>
-                  <td class="py-4 px-6 text-left break-words whitespace-normal truncate max-w-xs">
+                  <td class="py-4 px-6 truncate max-w-xs">{{ subjectList.topic || 'Tēma nav pieejama' }}</td>
+                  <td class="py-4 px-6 truncate max-w-xs">
                     <span v-html="convertTextWithLinks(subjectList.homework || 'Mājasdarbs nav piešķirts')"></span>
                   </td>
-                  <td class="py-4 px-6 text-left">
-                    <span v-if="subjectList.absences.length">
-                      <template v-for="absence in subjectList.absences" :key="absence.AbsenceID">
-                        <span v-if="absence.Absence === 1" class="inline-block w-4 h-4 bg-green-500 rounded-full"></span>
-                        <span v-if="absence.Absence === 2" class="inline-block w-4 h-4 bg-red-500 rounded-full"></span>
-                      </template>
-                    </span>
-                    <span v-else>
-                      <span class="inline-block w-4 h-4 bg-gray-400 rounded-full"></span>
-                    </span>
+                  <td class="py-4 px-6">
+                    <template v-for="absence in subjectList.absences" :key="absence.AbsenceID">
+                      <span v-if="absence.Absence === 1" class="inline-block w-4 h-4 bg-green-500 rounded-full"></span>
+                      <span v-if="absence.Absence === 2" class="inline-block w-4 h-4 bg-red-500 rounded-full"></span>
+                    </template>
+                    <span v-if="!subjectList.absences.length" class="inline-block w-4 h-4 bg-gray-400 rounded-full"></span>
                   </td>
-                  <td class="py-4 px-6 text-left">
-                    <span v-if="subjectList.marks.length && subjectList.marks[0].mark">
-                      <span class="font-semibold">{{ subjectList.marks[0].mark }}</span>
+                  <td class="py-4 px-6">
+                    <span v-if="subjectList.marks.length && subjectList.marks[0].mark" class="font-semibold">
+                      {{ subjectList.marks[0].mark }}
                     </span>
                   </td>
                 </tr>
@@ -65,13 +72,14 @@
             </table>
           </div>
   
-          <div v-else class="text-center mt-6 text-gray-500 italic">
+          <div v-else class="text-center text-gray-500 italic mt-6">
             Nav priekšmetu šajā dienā.
           </div>
         </div>
       </div>
     </AuthenticatedLayout>
   </template>
+  
   
   <script>
   import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
