@@ -8,8 +8,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\Log; 
 
 class ProfileController extends Controller
 {
@@ -75,10 +77,11 @@ class ProfileController extends Controller
         }
     
         // Store the new profile picture
-        $path = $request->file('profile_picture')->store('profile_pictures');
+        $path = $request->file('profile_picture')->store('profile_pictures', 'public');
     
         $user->update(['profilePicturePath' => $path]); // Save new picture path
     
         return back()->with('status', 'Profile picture updated!');
     }
+
 }

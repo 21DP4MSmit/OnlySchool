@@ -27,14 +27,15 @@
                                 </Link>
                                 <Link href="/conversations" class="text-white relative hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
                                     Vēstules
-                                    <span v-if="$page.props.unreadMessageCount > 0" class="absolute right-0 top-0 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-xs font-bold text-white">{{ $page.props.unreadMessageCount }}</span>
+                                    <span v-if="page.props.unreadMessageCount > 0" class="absolute right-0 top-0 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-xs font-bold text-white">{{ page.props.unreadMessageCount }}</span>
                                 </Link>
                             </div>
                         </div>
 
                         <div class="flex items-center space-x-6">
-                            <p class="text-lg">{{ $page.props.auth.user.name }}!</p>
-                            <img src="`/storage/${user.profilePicturePath}`" alt="Profile" class="h-10 w-10 rounded-full border-2 border-white shadow-md" />
+                            <p class="text-lg">{{ page.props.auth.user.name }}!</p>
+                            <!-- Display user profile picture -->
+                            <img :src="profilePictureUrl" alt="Profile" class="h-10 w-10 rounded-full border-2 border-white shadow-md" />
                             <div class="relative">
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
@@ -73,11 +74,21 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { computed } from 'vue';
+import { usePage } from '@inertiajs/vue3'; // Import usePage to access Inertia props
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import { Link } from '@inertiajs/vue3'; // Import Inertia Link
 
-const showingNavigationDropdown = ref(false);
+const page = usePage();
+
+// Computed property to generate profile picture URL
+const profilePictureUrl = computed(() => {
+    const profilePath = page.props.auth.user.profilePicturePath;
+    if (profilePath) {
+        return `/storage/${profilePath}`;  // Access image from public storage
+    }
+    return '/images/default-profile.jpg'; // Default image if profile picture is missing
+});
 </script>
