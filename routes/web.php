@@ -24,6 +24,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/table-manager', [TableController::class, 'index'])->name('table.manager');
         Route::post('/table-manager/insert', [TableController::class, 'insert'])->name('table.insert');
         Route::get('/table-manager/data/{table}', [TableController::class, 'fetchData'])->name('table.data');
+        Route::post('/table-manager/update/{table}/{id}', [TableController::class, 'update'])->name('table.update');
+        Route::post('/table-manager/insert-user', [TableController::class, 'insertUser'])->name('table.insert.user');
+
 
         Route::get('/TeacherDashboard', function () {
             return Inertia::render('TeacherDashboard')->name('TeachBoard');
