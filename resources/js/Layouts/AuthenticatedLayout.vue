@@ -27,7 +27,9 @@
                                 </Link>
                                 <Link href="/conversations" class="text-white relative hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
                                     Vēstules
-                                    <span v-if="page.props.unreadMessageCount > 0" class="absolute right-0 top-0 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-xs font-bold text-white">{{ page.props.unreadMessageCount }}</span>
+                                    <span v-if="page.props.unreadMessageCount > 0" class="absolute right-0 top-0 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-xs font-bold text-white">
+                                        {{ page.props.unreadMessageCount }}
+                                    </span>
                                 </Link>
                             </div>
                         </div>
@@ -75,20 +77,20 @@
 
 <script setup>
 import { computed } from 'vue';
-import { usePage } from '@inertiajs/vue3'; // Import usePage to access Inertia props
+import { usePage } from '@inertiajs/vue3';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
-import { Link } from '@inertiajs/vue3'; // Import Inertia Link
+import { Link } from '@inertiajs/vue3';
 
 const page = usePage();
 
-// Computed property to generate profile picture URL
+console.log('Unread Message Count:', page.props.unreadMessageCount);
 const profilePictureUrl = computed(() => {
     const profilePath = page.props.auth.user.profilePicturePath;
     if (profilePath) {
-        return `/storage/${profilePath}`;  // Access image from public storage
+        return `/storage/${profilePath}`;
     }
-    return '/images/default-profile.jpg'; // Default image if profile picture is missing
+    return '/images/default-profile.jpg';
 });
 </script>

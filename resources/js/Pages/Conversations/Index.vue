@@ -13,18 +13,26 @@
 
             <!-- Conversations list -->
             <ul class="space-y-4">
-                <li v-for="conversation in conversations" :key="conversation.id" class="bg-white shadow-md rounded-lg p-4 flex justify-between items-center" :class="{'bg-gray-100': hasUnreadMessages(conversation)}">
+                <li 
+                    v-for="conversation in sortedConversations" 
+                    :key="conversation.id" 
+                    class="bg-white shadow-md rounded-lg p-4 flex justify-between items-center" 
+                    :class="{'bg-gray-100': hasUnreadMessages(conversation)}"
+                >
                     <div>
                         <Link :href="route('conversations.show', conversation.id)" class="text-xl font-semibold text-gray-900 hover:text-blue-500 transition duration-300">
-                            <!-- Display conversation subject or participants -->
                             {{ conversation.subject || getParticipants(conversation) }}
                         </Link>
-                        <!-- Display participant names for individual conversations (excluding the current user) -->
+                        
                         <p v-if="!isGroupChat(conversation)" class="text-gray-600 text-sm">
                             Messaging: {{ getParticipants(conversation) }}
                         </p>
+                        
+                        <!-- Display the latest message timestamp -->
+                        <p class="text-gray-500 text-xs">
+                            Latest message: {{ formatTimestamp(getLatestMessage(conversation).created_at) }}
+                        </p>
                     </div>
-                    <!-- Show unread message badge if the conversation has unread messages -->
                     <div v-if="hasUnreadMessages(conversation)" class="text-red-500 font-bold">Unread Messages</div>
                 </li>
             </ul>
@@ -35,6 +43,7 @@
 <script>
 import { Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { format } from 'date-fns'; // Importing date formatting
 
 export default {
     props: {
@@ -42,6 +51,16 @@ export default {
     },
     components: {
         Link,
+    },
+    computed: {
+        // Sorting conversations by the latest message timestamp
+        sortedConversations() {
+            return [...this.conversations].sort((a, b) => {
+                const latestMessageA = this.getLatestMessage(a);
+                const latestMessageB = this.getLatestMessage(b);
+                return new Date(latestMessageB.created_at) - new Date(latestMessageA.created_at);
+            });
+        }
     },
     methods: {
         createNewConversation() {
@@ -59,8 +78,17 @@ export default {
             }
         },
         hasUnreadMessages(conversation) {
-            // Check if there are unread messages
-            return conversation.messages.some(message => !message.is_read && message.user_id !== this.$page.props.auth.user.id);
+            return conversation.messages.some(message => 
+                !message.is_read && message.user_id !== this.$page.props.auth.user.id
+            );
+        },
+        getLatestMessage(conversation) {
+            return conversation.messages.reduce((latest, current) => 
+                new Date(current.created_at) > new Date(latest.created_at) ? current : latest
+            );
+        },
+        formatTimestamp(timestamp) {
+            return format(new Date(timestamp), 'PPpp'); // Format timestamp using date-fns
         }
     },
 };
