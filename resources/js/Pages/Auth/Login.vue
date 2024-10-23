@@ -34,9 +34,13 @@ const submit = () => {
     <div class="flex min-h-screen bg-gray-100">
         <!-- Blue Gradient Section with Login Form & Welcome Text -->
         <div class="flex flex-col items-center justify-center w-full lg:w-1/2 px-6 py-12 bg-gradient-to-br from-blue-700 via-blue-500 to-blue-400 shadow-xl">
-            <div class="text-center p-6 text-white mb-8">
-                <h2 class="text-4xl font-bold tracking-tight leading-tight mb-2">Pieslēgties</h2>
+            
+            <!-- Logo and Text Section -->
+            <div class="flex items-center space-x-4 mb-6">
+                <img src="@/assets/new-logo.png" alt="OnlySchool Logo" class="h-16 w-auto" />
+                <h1 class="text-5xl font-bold text-white">OnlySchool</h1>
             </div>
+            <p class="text-2xl text-white mb-8">Pieslēgties</p>
 
             <form @submit.prevent="submit" class="bg-white p-10 rounded-2xl shadow-2xl w-full max-w-md transform hover:shadow-lg transition duration-300 ease-in-out">
                 <div v-if="status" class="mb-4 text-sm font-medium text-green-600">

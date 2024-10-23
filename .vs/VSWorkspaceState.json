@@ -1,6 +1,16 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\app",
+    "\\app\\Http",
+    "\\app\\Http\\Controllers",
+    "\\app\\Models",
+    "\\app\\Providers",
+    "\\resources",
+    "\\resources\\js",
+    "\\resources\\js\\Pages",
+    "\\resources\\js\\Pages\\TeacherAbsences"
   ],
+  "SelectedNode": "\\app\\Http\\Controllers\\UserController.php",
   "PreviewInSolutionExplorer": false
 }
