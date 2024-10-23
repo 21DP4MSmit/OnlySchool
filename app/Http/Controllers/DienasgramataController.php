@@ -12,9 +12,37 @@ class DienasgramataController extends Controller
 {
     // For Dienasgramata
     public function index(Request $request)
+<<<<<<< HEAD
     {
         return $this->fetchSubjectLists($request, 'Dienasgramata/Index');
     }
+=======
+{
+    
+    $classId = Auth::user()->class_id;
+
+    // Ja ir dots nedelas sakums, ja nav izmanto current week
+    $weekStart = $request->input('weekStart') 
+                ? Carbon::parse($request->input('weekStart'))
+                : Carbon::now()->startOfWeek(Carbon::MONDAY);
+    
+    // nedelas beigas = piektdiena
+    $weekEnd = $weekStart->copy()->endOfWeek(Carbon::FRIDAY);
+    
+    // fetcho no db stundas konkretam datumam
+    $subjectLists = SubjectList::where('ClassID', $classId)
+                        ->whereBetween('Date', [$weekStart, $weekEnd])
+                        ->with('subject', 'classroom', 'marks', 'absences')
+                        ->get();
+
+    return inertia('Dienasgramata/Index', [
+        'subjectLists' => $subjectLists,
+        'weekStart' => $weekStart->toDateString(), 
+    ]);
+}
+    
+
+>>>>>>> bab908b1929d86c7875a3722bf6439f08973f942
 
     // For Teacher Absences (separate component)
     public function teacherAbsences(Request $request)
