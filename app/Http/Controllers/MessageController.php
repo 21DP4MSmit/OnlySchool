@@ -13,22 +13,26 @@ class MessageController extends Controller
     {
         $request->validate([
             'text' => 'required|string',
+            'attachments.*' => 'file|max:5120',
         ]);
 
         $message = new Message();
         $message->conversation_id = $conversation->id;
         $message->user_id = auth()->id();
         $message->text = $request->text;
+
+        if ($request->hasFile('attachments')) {
+            $attachments = [];
+            foreach ($request->file('attachments') as $file) {
+                $filePath = $file->store('attachments', 'public');
+                $attachments[] = $filePath;
+            }
+            $message->attachments = json_encode($attachments);
+        }
+
         $message->save();
 
         return redirect()->back();
     }
 
-    public function markAsRead(Conversation $conversation)
-    {
-        $user = auth()->user();
-        $conversation->messages()->where('user_id', '!=', $user->id)->update(['is_read' => true]);
-
-        return redirect()->back();
-    }
 }

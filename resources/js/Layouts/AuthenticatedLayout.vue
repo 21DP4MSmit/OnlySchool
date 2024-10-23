@@ -7,7 +7,7 @@
                 <div class="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between items-center">
                         <div class="flex items-center">
-                            <a href="#" class="flex items-center cursor-pointer">
+                            <a href="/dashboard" class="flex items-center cursor-pointer">
                                 <ApplicationLogo class="block h-10 w-auto fill-current text-white" />
                                 <h1 class="text-3xl font-bold ms-3 leading-7">OnlySchool</h1>
                             </a>
@@ -27,13 +27,15 @@
                                 </Link>
                                 <Link href="/conversations" class="text-white relative hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
                                     Vēstules
-                                    <span v-if="page.props.unreadMessageCount > 0" class="absolute right-0 top-0 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-xs font-bold text-white">{{ page.props.unreadMessageCount }}</span>
+                                    <span v-if="page.props.unreadMessageCount > 0" class="absolute right-0 top-0 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-xs font-bold text-white">
+                                        {{ page.props.unreadMessageCount }}
+                                    </span>
                                 </Link>
                             </div>
                         </div>
 
                         <div class="flex items-center space-x-6">
-                            <p class="text-lg">{{ page.props.auth.user.name }}!</p>
+                            <p class="text-lg">{{ page.props.auth.user.name }}</p>
                             <!-- Display user profile picture -->
                             <img :src="profilePictureUrl" alt="Profile" class="h-10 w-10 rounded-full border-2 border-white shadow-md" />
                             <div class="relative">
@@ -82,12 +84,12 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 
 const page = usePage();
 
-// Computed property to generate profile picture URL
+console.log('Unread Message Count:', page.props.unreadMessageCount);
 const profilePictureUrl = computed(() => {
     const profilePath = page.props.auth.user.profilePicturePath;
     if (profilePath) {
-        return `/storage/${profilePath}`;  // Access image from public storage
+        return `/storage/${profilePath}`;
     }
-    return '/images/default-profile.jpg'; // Default image if profile picture is missing
+    return '/images/default-profile.jpg';
 });
 </script>

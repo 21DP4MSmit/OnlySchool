@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\Conversation;
 use App\Models\User;
@@ -12,13 +13,11 @@ class ConversationController extends Controller
     {
         $user = auth()->user();
 
-        // Get all conversations where the current user is a participant
         $conversations = Conversation::with('participants', 'messages')
             ->whereHas('participants', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })->get();
 
-        // Calculate unread messages count for conversations where the user is a participant
         $unreadMessageCount = $this->getUnreadMessageCount($user);
 
         return inertia('Conversations/Index', compact('conversations', 'unreadMessageCount'));
@@ -28,15 +27,13 @@ class ConversationController extends Controller
     {
         $user = auth()->user();
 
-        // Ensure that only participants can access the conversation
         if (!$conversation->participants->contains($user->id)) {
             abort(403, 'Unauthorized access to this conversation.');
         }
 
-        // Mark unread messages as read for the current user
+
         $this->markMessagesAsRead($conversation, $user);
 
-        // Ensure we are loading messages and participants
         $conversation->load('messages.user', 'participants');
 
         return inertia('Conversations/Show', compact('conversation'));
@@ -44,25 +41,38 @@ class ConversationController extends Controller
 
 
 
-    // Helper method to calculate unread message count
+
     private function getUnreadMessageCount(User $user)
     {
-        return Conversation::whereHas('participants', function ($query) use ($user) {
-            $query->where('user_id', $user->id); // Ensure the user is a participant
+        $conversationsWithUnread = Conversation::whereHas('participants', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
         })
         ->whereHas('messages', function ($query) use ($user) {
-            $query->where('is_read', false)->where('user_id', '!=', $user->id);
-        })->count();
+            $query->where('is_read', false)
+                ->where('user_id', '!=', $user->id);
+        })
+        ->with(['messages' => function ($query) use ($user) {
+            $query->where('is_read', false)
+                ->where('user_id', '!=', $user->id);
+        }])
+        ->get();
+
+        return $conversationsWithUnread->count();
     }
 
-    // Helper method to mark messages as read
+
     private function markMessagesAsRead(Conversation $conversation, User $user)
     {
-        $conversation->messages()
+        $unreadMessages = $conversation->messages()
             ->where('user_id', '!=', $user->id)
             ->where('is_read', false)
             ->update(['is_read' => true]);
+
+        cache()->forget('unread_message_count_' . $user->id);
     }
+
+
+
 
 
 
@@ -72,19 +82,16 @@ class ConversationController extends Controller
             'subject' => 'nullable|string|max:255',
             'recipients' => 'required|array',
             'recipients.*' => 'exists:users,id',
-            'initialMessage' => 'required|string|max:5000', // Validate the initial message
+            'initialMessage' => 'required|string|max:5000',
         ]);
     
-        // Create the new conversation
         $conversation = Conversation::create([
             'subject' => $request->subject,
         ]);
     
-        // Add the current user and recipients as participants
         $participants = array_merge($request->recipients, [auth()->id()]);
         $conversation->participants()->attach($participants);
     
-        // Add the initial message to the conversation
         $conversation->messages()->create([
             'user_id' => auth()->id(),
             'text' => $request->initialMessage,
@@ -96,11 +103,9 @@ class ConversationController extends Controller
     public function leave(Request $request)
     {
         $user = auth()->user();
-
-        // Ensure cache is cleared for unread messages
         cache()->forget('unread_message_count_'.$user->id);
 
-        return redirect()->route('dashboard'); // Or any other desired route
+        return redirect()->route('dashboard');
     }
 
 

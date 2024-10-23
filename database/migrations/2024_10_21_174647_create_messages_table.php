@@ -17,6 +17,7 @@ return new class extends Migration
         $table->foreignId('user_id')->constrained()->onDelete('cascade');
         $table->boolean('is_read')->default(false);
         $table->text('text');
+        $table->json('attachments')->nullable();
         $table->timestamps();
     });
 }
