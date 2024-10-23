@@ -9,7 +9,9 @@
       <div class="left-section">
         <h2>Šodienas stundu saraksts:</h2>
         <div class="timetable">
-          <p>(Tabula)</p>
+          <ul>
+            <li v-for="lesson in todayTimetable" :key="lesson.id">{{ lesson.subject }} - {{ lesson.time }}</li>
+          </ul>
         </div>
       </div>
 
@@ -18,25 +20,20 @@
 
         <!-- Logbook Entries -->
         <div class="logbook">
-          <h3>Ieraksti dienasgrāmatā:</h3>
+          <h3>Pēdējās atzīmes:</h3>
           <div class="logbook-content">
-            (Uzrādas izmaiņas dienasgrāmatā: stundu izmaiņas, skolotāju maiņas, jaunas atzīmes, kavējumu atzīmējumi, piezīmes)
+            <ul>
+              <li v-for="grade in recentGrades" :key="grade.id">{{ grade.subject }} - {{ grade.grade }} ({{ grade.date }})</li>
+            </ul>
           </div>
         </div>
-
         <!-- Monthly Absences -->
         <div class="absences">
           <h3>Mēneša kavējumi:</h3>
           <div class="absences-content">
-            (Tabula ar stundām, kurās un cik ir kavējumi)
-          </div>
-        </div>
-
-        <!-- Upcoming Tests -->
-        <div class="tests">
-          <h3>Nākamie kontroldarbi:</h3>
-          <div class="tests-content">
-            (Skolotājam nākamo 7 dienu periodā stundā atzīmējot kontroldarbu, tas rādas šeit)
+            <ul>
+              <li v-for="absence in monthlyAbsences" :key="absence.id">{{ absence.date }} - {{ absence.reason }}</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -44,17 +41,30 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    currentDate: String,
-    currentTime: String,
-    student: {
-      type: Object,
-      required: true,
-    },
-  },
-};
+<script setup>
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+
+const todayTimetable = ref([]);
+const recentGrades = ref([]);
+const monthlyAbsences = ref([]);
+
+onMounted(() => {
+  // Fetch today's timetable
+  axios.get('/api/timetable/today').then(response => {
+    todayTimetable.value = response.data;
+  });
+
+  // Fetch the 4-5 most recent grades
+  axios.get('/api/grades/recent').then(response => {
+    recentGrades.value = response.data;
+  });
+
+  // Fetch absences for the current month
+  axios.get('/api/absences/monthly').then(response => {
+    monthlyAbsences.value = response.data;
+  });
+});
 </script>
 
 <style scoped>

@@ -1,7 +1,6 @@
 <template>
     <AuthenticatedLayout>
         <div class="container mx-auto px-4 py-8">
-            <!-- Page Header -->
             <div class="flex justify-between items-center mb-8">
                 <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight leading-tight">Teacher Absences</h1>
                 <span class="text-lg font-semibold text-gray-600 bg-gray-200 py-2 px-4 rounded-lg shadow-sm">
@@ -9,7 +8,6 @@
                 </span>
             </div>
 
-            <!-- Week Navigation -->
             <div class="flex justify-between items-center mb-8">
                 <button @click="prevWeek" class="text-4xl text-blue-600 hover:text-blue-700 transition transform hover:scale-105 font-bold">
                     &lt;
@@ -22,7 +20,6 @@
                 </button>
             </div>
 
-            <!-- Subject Lists by Day -->
             <div v-for="(subjectLists, day) in weekdays" :key="day" class="mb-12">
                 <h2 class="text-3xl font-semibold text-gray-800 mb-6">{{ day }}</h2>
 
@@ -58,6 +55,7 @@
                                     <template v-for="absence in subjectList.absences" :key="absence.AbsenceID">
                                         <span v-if="absence.Absence === 1" class="inline-block w-4 h-4 bg-green-500 rounded-full"></span>
                                         <span v-if="absence.Absence === 2" class="inline-block w-4 h-4 bg-red-500 rounded-full"></span>
+                                        <span v-if="absence.Absence === null" class="inline-block w-4 h-4 bg-gray-400 rounded-full"></span>
                                     </template>
                                     <span v-if="!subjectList.absences.length" class="inline-block w-4 h-4 bg-gray-400 rounded-full"></span>
                                 </td>
@@ -89,7 +87,6 @@
                         <input type="text" :value="selectedSubject.classroom.Classroom" class="w-full border border-gray-300 rounded-md p-2" readonly />
                     </div>
 
-                    <!-- Absence Table -->
                     <div class="overflow-x-auto">
                         <table class="min-w-full bg-white">
                             <thead>
@@ -141,7 +138,7 @@
         data() {
             return {
                 currentDate: '',
-                currentWeekStart: startOfWeek(new Date(), { weekStartsOn: 1 }), // Start from Monday
+                currentWeekStart: startOfWeek(new Date(), { weekStartsOn: 1 }),
                 lessonTimes: [
                     "07:45 - 08:25", "08:30 - 09:10", "09:15 - 09:55", "10:10 - 10:50",
                     "10:55 - 11:35", "12:05 - 12:45", "12:50 - 13:30", "13:35 - 14:15",
@@ -167,11 +164,10 @@
             groupedSubjectLists() {
                 return this.subjectLists.reduce((groups, subjectList) => {
                     const lessonDate = new Date(subjectList.Date);
-
                     const normalizedLessonDate = new Date(lessonDate.toISOString().split('T')[0]);
                     const normalizedWeekStart = new Date(this.currentWeekStart.toISOString().split('T')[0]);
                     const normalizedWeekEnd = new Date(normalizedWeekStart);
-                    normalizedWeekEnd.setDate(normalizedWeekEnd.getDate() + 4); // Monday-Friday range
+                    normalizedWeekEnd.setDate(normalizedWeekEnd.getDate() + 4);
 
                     if (normalizedLessonDate >= normalizedWeekStart && normalizedLessonDate <= normalizedWeekEnd) {
                         const day = normalizedLessonDate.toLocaleDateString('en-US', { weekday: 'long' });
@@ -194,76 +190,76 @@
             this.loadLessonsForWeek();
         },
         methods: {
-   updateCurrentDate() {
-       const today = new Date();
-       this.currentDate = today.toLocaleDateString('lv-LV', {
-           year: 'numeric',
-           month: '2-digit',
-           day: '2-digit',
-       });
-   },
-   getTimeForLesson(index) {
-       return this.lessonTimes[index] || 'Laiks nav pieejams';
-   },
-   openModal(subject) {
-        this.selectedSubject = subject;
-        this.showModal = true;
-    // Use subject.classroom.ClassID instead of subject.classroom.Classroom
-        this.fetchUsers(subject.classroom.ClassID);  // Fetch users by class_id (not classroom)
-    },
-   closeModal() {
-       this.showModal = false;
-       this.selectedSubject = null;
-   },
-   async fetchUsers(classroomId) {
-       try {
-           const response = await axios.get(`/users-by-class/${classroomId}`);
-           this.users = response.data;  // Populate the users array with the fetched data
-       } catch (error) {
-           console.error('Error fetching users:', error);
-       }
-   },
-   saveAbsences() {
-    // Prepare the absence data to be sent
-    const absencesData = {
-        subject_id: this.selectedSubject.SubjectID,
-        class_id: this.selectedSubject.classroom.ClassroomID,
-        absences: this.selectedAbsence
-    };
+            updateCurrentDate() {
+                const today = new Date();
+                this.currentDate = today.toLocaleDateString('lv-LV', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                });
+            },
+            getTimeForLesson(index) {
+                return this.lessonTimes[index] || 'Laiks nav pieejams';
+            },
+            openModal(subject) {
+                this.selectedSubject = subject;
+                this.showModal = true;
+                this.fetchUsers(subject.classroom.ClassID);
+            },
+            closeModal() {
+                this.showModal = false;
+                this.selectedSubject = null;
+            },
+            async fetchUsers(classroomId) {
+                try {
+                    const response = await axios.get(`/users-by-class/${classroomId}`);
+                    this.users = response.data;
+                } catch (error) {
+                    console.error('Error fetching users:', error);
+                }
+            },
+            saveAbsences() {
+                const dateParts = this.currentDate.split('.');
+                const formattedDate = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`).toISOString().split('T')[0];
 
-    console.log('Data to be sent:', absencesData); // Log the data for debugging
+                const absencesData = {
+                    subject_id: this.selectedSubject.SubjectID,
+                    class_id: this.selectedSubject.classroom.ClassID,
+                    date: formattedDate,
+                    absences: this.selectedAbsence,
+                };
 
-    // Send the data to the server
-    axios.post('/save-absences', absencesData)
-        .then(response => {
-            console.log('Absences saved successfully', response);
-            this.closeModal();
-        })
-        .catch(error => {
-            console.error('Error saving absences:', error);
-        });
-},
-   loadLessonsForWeek() {
-       const weekStartDate = this.currentWeekStart.toISOString().split('T')[0];
-       this.$inertia.get('/TeacherAbsences', {
-           weekStart: weekStartDate,
-       }, {
-           preserveState: true,
-       });
-   },
-   prevWeek() {
-       this.currentWeekStart = addWeeks(this.currentWeekStart, -1);
-       this.loadLessonsForWeek();
-   },
-   nextWeek() {
-       this.currentWeekStart = addWeeks(this.currentWeekStart, 1);
-       this.loadLessonsForWeek();
-   },
-   // Here's the function we're using
-   convertTextWithLinks(text) {
-       const urlRegex = /(https?:\/\/[^\s]+)/g;
-       return text.replace(urlRegex, (url) => `<a href="${url}" class="text-blue-500 hover:underline" target="_blank">${url}</a>`);
-   }
-},
+                console.log('Data to be sent:', absencesData);
+
+                axios.post('/save-absences', absencesData)
+                    .then(response => {
+                        console.log('Absences saved successfully', response);
+                        this.closeModal();
+                    })
+                    .catch(error => {
+                        console.error('Error saving absences:', error);
+                    });
+            },
+            loadLessonsForWeek() {
+                const weekStartDate = this.currentWeekStart.toISOString().split('T')[0];
+                this.$inertia.get('/TeacherAbsences', {
+                    weekStart: weekStartDate,
+                }, {
+                    preserveState: true,
+                });
+            },
+            prevWeek() {
+                this.currentWeekStart = addWeeks(this.currentWeekStart, -1);
+                this.loadLessonsForWeek();
+            },
+            nextWeek() {
+                this.currentWeekStart = addWeeks(this.currentWeekStart, 1);
+                this.loadLessonsForWeek();
+            },
+            convertTextWithLinks(text) {
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
+                return text.replace(urlRegex, (url) => `<a href="${url}" class="text-blue-500 hover:underline" target="_blank">${url}</a>`);
+            }
+        },
     };
 </script>

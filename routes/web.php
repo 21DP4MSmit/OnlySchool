@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\DienasgramataController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\MessageController;
 use App\Http\Middleware\RoleMiddleware;
+use App\Http\Controllers\StudentDashboardController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -28,7 +30,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/table-manager/update/{table}/{id}', [TableController::class, 'update'])->name('table.update');
         Route::post('/table-manager/insert-user', [TableController::class, 'insertUser'])->name('table.insert.user');
         Route::get('/users-by-class/{class_id}', [UserController::class, 'getUsersByClass']);
-        Route::post('/save-absences', [AbsenceController::class, 'saveAbsences']);
+        Route::post('/save-absences', [\App\Http\Controllers\AbsenceController::class, 'saveAbsences']);
+
 
 
 
@@ -81,6 +84,15 @@ Route::middleware('auth')->group(function () {
         // Profile Picture Routes
         Route::post('/profile-picture', [ProfileController::class, 'updateProfilePicture'])->name('profile.picture.update');
         Route::get('/profile-picture', [ProfileController::class, 'getProfilePicture'])->name('profile.picture');
+
+        // Route to get today's timetable
+        Route::get('/api/timetable/today', [StudentDashboardController::class, 'getTodayTimetable'])->name('timetable.today');
+
+        // Route to get recent grades
+        Route::get('/api/grades/recent', [StudentDashboardController::class, 'getRecentGrades'])->name('grades.recent');
+
+        // Route to get student's absences for the current month
+        Route::get('/api/absences/monthly', [StudentDashboardController::class, 'getMonthlyAbsences'])->name('absences.monthly');
 
     });
 
