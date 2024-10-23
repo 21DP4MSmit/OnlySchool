@@ -32,10 +32,9 @@ const submit = () => {
     <Head title="Log in" />
 
     <div class="flex min-h-screen bg-gray-100">
-        <!-- Blue Gradient Section with Login Form & Welcome Text -->
         <div class="flex flex-col items-center justify-center w-full lg:w-1/2 px-6 py-12 bg-gradient-to-br from-blue-700 via-blue-500 to-blue-400 shadow-xl">
             
-            <!-- Logo and Text Section -->
+            
             <div class="flex items-center space-x-4 mb-6">
                 <img src="@/assets/new-logo.png" alt="OnlySchool Logo" class="h-16 w-auto" />
                 <h1 class="text-5xl font-bold text-white">OnlySchool</h1>
@@ -105,11 +104,11 @@ const submit = () => {
             </form>
         </div>
 
-        <!-- News Section on White Background with Silver Accents -->
+        
         <div class="hidden lg:flex flex-col items-center justify-start w-1/2 bg-white p-10">
             <h3 class="text-3xl font-bold text-gray-900 mb-8">Izglītībai & Atpūtai</h3>
 
-            <!-- Larger Panel for the New News Item -->
+            <!-- Jaunumu sekcija login lapai -->
             <a href="https://isic.lv/" target="_blank" class="mb-6 block w-full max-w-md p-6 bg-blue-50 border border-blue-300 rounded-lg shadow-lg hover:shadow-xl transition transform hover:scale-105">
                 <img src="https://www.cnet.com/personal-finance/assets/uploads/2022/09/greenlight-debit-card.webp?auto=webp" alt="New Semester" class="w-full h-48 object-cover rounded-t-md mb-4">
                 <div>
@@ -119,8 +118,6 @@ const submit = () => {
                     </p>
                 </div>
             </a>
-
-            <!-- Three Existing Panels Below the Larger One -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <a href="https://jaunmokupils.lv/pils/pils-pakalpojumi/skolenu-un-turistu-grupam/" target="_blank" class="block p-4 bg-gray-50 border border-gray-200 rounded-md shadow-sm hover:shadow-md transition transform hover:scale-105">
                     <img src="https://jaunmokupils.lv/wp-content/uploads/2021/09/JaunmokuPils_No-augs-as_5_Web_Facebook.jpg" alt="Parent-Teacher Meetings" class="w-full h-32 object-cover rounded-t-md">
