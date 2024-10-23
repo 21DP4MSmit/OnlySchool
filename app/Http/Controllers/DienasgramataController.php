@@ -6,25 +6,31 @@ use Illuminate\Http\Request;
 use App\Models\SubjectList;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Inertia\Inertia;
 
 class DienasgramataController extends Controller
 {
-    
+
+    // For Teacher Absences (separate component)
+    public function teacherAbsences(Request $request)
+    {
+        return $this->fetchSubjectLists($request, 'TeacherAbsences/Index');
+    }
 
     public function index(Request $request)
 {
-    // Get the user's class ID
+    
     $classId = Auth::user()->class_id;
 
-    // If a week start date is provided, use it, else use the current week
+    // Ja ir dots nedelas sakums, ja nav izmanto current week
     $weekStart = $request->input('weekStart') 
                 ? Carbon::parse($request->input('weekStart'))
                 : Carbon::now()->startOfWeek(Carbon::MONDAY);
     
-    // Set the end of the week (Friday)
+    // nedelas beigas = piektdiena
     $weekEnd = $weekStart->copy()->endOfWeek(Carbon::FRIDAY);
     
-    // Fetch subject lists for the specified week
+    // fetcho no db stundas konkretam datumam
     $subjectLists = SubjectList::where('ClassID', $classId)
                         ->whereBetween('Date', [$weekStart, $weekEnd])
                         ->with('subject', 'classroom', 'marks', 'absences')
@@ -32,7 +38,7 @@ class DienasgramataController extends Controller
 
     return inertia('Dienasgramata/Index', [
         'subjectLists' => $subjectLists,
-        'weekStart' => $weekStart->toDateString(), // Pass weekStart back to the frontend
+        'weekStart' => $weekStart->toDateString(), 
     ]);
 }
     
