@@ -10,13 +10,14 @@ use Inertia\Inertia;
 
 class DienasgramataController extends Controller
 {
-    // For Dienasgramata
-    public function index(Request $request)
-<<<<<<< HEAD
+
+    // For Teacher Absences (separate component)
+    public function teacherAbsences(Request $request)
     {
-        return $this->fetchSubjectLists($request, 'Dienasgramata/Index');
+        return $this->fetchSubjectLists($request, 'TeacherAbsences/Index');
     }
-=======
+
+    public function index(Request $request)
 {
     
     $classId = Auth::user()->class_id;
