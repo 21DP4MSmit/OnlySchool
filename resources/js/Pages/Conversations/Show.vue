@@ -5,14 +5,14 @@
                 @click="goBack"
                 class="mb-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition duration-300"
             >
-                Back to Conversations
+                Atpakaļ
             </button>
 
             <button 
                 @click="showParticipants"
                 class="ml-4 mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300"
             >
-                View Participants
+                Skatīt dalībnieku
             </button>
 
             <h1 class="text-3xl font-bold mb-6">{{ conversation.subject || 'Conversation' }}</h1>
@@ -76,8 +76,6 @@
                     placeholder="Type a message..." 
                     class="flex-grow border rounded-lg px-4 py-2"
                 />
-
-                <!-- Custom Attach Button -->
                 <label for="file-upload" class="cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-gray-600 hover:text-gray-800 transition duration-200">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16 12V8a4 4 0 00-8 0v6a4 4 0 008 0V10m-4 2v6" />
@@ -107,11 +105,8 @@
                         class="w-16 h-16 object-cover" 
                     />
 
-                    <!-- Non-image File Preview -->
                     <div v-else class="relative">
                         <img :src="fileIcon" class="w-16 h-16 object-cover" />
-                        
-                        <!-- Full file name hover effect for non-image files -->
                         <span 
                             class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition duration-300"
                             style="white-space: nowrap;"
@@ -122,7 +117,6 @@
                 </div>
             </div>
 
-            <!-- Participants Modal -->
             <div v-if="participantsVisible" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
                 <div class="bg-white rounded-lg p-6 w-full max-w-lg">
                     <div class="flex justify-between items-center mb-4">
@@ -142,22 +136,18 @@
                 </div>
             </div>
 
-            <!-- Image modal with download, close button, and thumbnail previews -->
             <div v-if="expandedImages.length" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
-                <!-- Full file name at the top-left -->
                 <div class="absolute top-4 left-4 text-white text-lg">
-                    {{ expandedImages[expandedImageIndex].split('/').pop() }} <!-- Full file name -->
+                    {{ expandedImages[expandedImageIndex].split('/').pop() }}
                 </div>
 
-                <!-- Close and download buttons positioned at the top-right of the screen -->
+                <!-- Close and download buttons-->
                 <div class="absolute top-4 right-4 flex space-x-4">
-                    <!-- Download button with white outline and color inversion -->
                     <a :href="`/storage/${expandedImages[expandedImageIndex]}`" download>
                         <div class="w-12 h-12 border border-white p-1 rounded-lg flex items-center justify-center">
                             <img :src="downloadIcon" alt="Download" class="w-full h-full filter invert" />
                         </div>
                     </a>
-                    <!-- Close (X) button with white outline -->
                     <button @click="closeImageModal" class="text-white text-2xl">
                         <div class="w-12 h-12 border border-white p-1 rounded-lg flex items-center justify-center bg-white">
                             <img :src="closeIcon" alt="Close" class="w-full h-full" />
@@ -210,7 +200,7 @@ export default {
             fileIcon: fileIcon,  
             downloadIcon: downloadIcon,  
             closeIcon: closeIcon,
-            participantsVisible: false,  // Track modal visibility
+            participantsVisible: false,
         };
     },
     methods: {
@@ -306,13 +296,11 @@ export default {
             }
         },
         handleImageError(event) {
-            event.target.src = 'https://via.placeholder.com/40'; // Default placeholder image if loading fails
+            event.target.src = 'https://via.placeholder.com/40';
         },
-        // Show participants modal
         showParticipants() {
             this.participantsVisible = true;
         },
-        // Close participants modal
         closeParticipants() {
             this.participantsVisible = false;
         },

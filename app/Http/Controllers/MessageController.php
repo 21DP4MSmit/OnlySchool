@@ -21,7 +21,6 @@ class MessageController extends Controller
         $message->user_id = auth()->id();
         $message->text = $request->text;
 
-        // Process file uploads
         if ($request->hasFile('attachments')) {
             $attachments = [];
             foreach ($request->file('attachments') as $file) {

@@ -82,19 +82,16 @@ class ConversationController extends Controller
             'subject' => 'nullable|string|max:255',
             'recipients' => 'required|array',
             'recipients.*' => 'exists:users,id',
-            'initialMessage' => 'required|string|max:5000', // Validate the initial message
+            'initialMessage' => 'required|string|max:5000',
         ]);
     
-        // Create the new conversation
         $conversation = Conversation::create([
             'subject' => $request->subject,
         ]);
     
-        // Add the current user and recipients as participants
         $participants = array_merge($request->recipients, [auth()->id()]);
         $conversation->participants()->attach($participants);
     
-        // Add the initial message to the conversation
         $conversation->messages()->create([
             'user_id' => auth()->id(),
             'text' => $request->initialMessage,
@@ -106,11 +103,9 @@ class ConversationController extends Controller
     public function leave(Request $request)
     {
         $user = auth()->user();
-
-        // Ensure cache is cleared for unread messages
         cache()->forget('unread_message_count_'.$user->id);
 
-        return redirect()->route('dashboard'); // Or any other desired route
+        return redirect()->route('dashboard');
     }
 
 

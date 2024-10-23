@@ -1,14 +1,14 @@
 <template>
     <AuthenticatedLayout>
         <div class="max-w-5xl mx-auto py-10">
-            <h1 class="text-3xl font-bold mb-6">Conversations</h1>
+            <h1 class="text-3xl font-bold mb-6">Saziņa</h1>
 
             <!-- Button to create a new conversation -->
             <button 
                 @click="createNewConversation"
                 class="mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300"
             >
-                New Conversation
+                Jauna sarakste
             </button>
 
             <!-- Conversations list -->
@@ -25,12 +25,12 @@
                         </Link>
                         
                         <p v-if="!isGroupChat(conversation)" class="text-gray-600 text-sm">
-                            Messaging: {{ getParticipants(conversation) }}
+                            {{ getParticipants(conversation) }}
                         </p>
                         
                         <!-- Display the latest message timestamp -->
                         <p class="text-gray-500 text-xs">
-                            Latest message: {{ formatTimestamp(getLatestMessage(conversation).created_at) }}
+                            Pēdēja ziņa: {{ formatTimestamp(getLatestMessage(conversation).created_at) }}
                         </p>
                     </div>
                     <div v-if="hasUnreadMessages(conversation)" class="text-red-500 font-bold">Unread Messages</div>
@@ -43,7 +43,7 @@
 <script>
 import { Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { format } from 'date-fns'; // Importing date formatting
+import { format } from 'date-fns';
 
 export default {
     props: {
@@ -53,7 +53,6 @@ export default {
         Link,
     },
     computed: {
-        // Sorting conversations by the latest message timestamp
         sortedConversations() {
             return [...this.conversations].sort((a, b) => {
                 const latestMessageA = this.getLatestMessage(a);
@@ -88,7 +87,7 @@ export default {
             );
         },
         formatTimestamp(timestamp) {
-            return format(new Date(timestamp), 'PPpp'); // Format timestamp using date-fns
+            return format(new Date(timestamp), 'PPpp');
         }
     },
 };

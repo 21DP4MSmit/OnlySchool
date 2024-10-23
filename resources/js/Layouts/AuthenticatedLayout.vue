@@ -7,7 +7,7 @@
                 <div class="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between items-center">
                         <div class="flex items-center">
-                            <a href="#" class="flex items-center cursor-pointer">
+                            <a href="/dashboard" class="flex items-center cursor-pointer">
                                 <ApplicationLogo class="block h-10 w-auto fill-current text-white" />
                                 <h1 class="text-3xl font-bold ms-3 leading-7">OnlySchool</h1>
                             </a>
@@ -35,7 +35,7 @@
                         </div>
 
                         <div class="flex items-center space-x-6">
-                            <p class="text-lg">{{ page.props.auth.user.name }}!</p>
+                            <p class="text-lg">{{ page.props.auth.user.name }}</p>
                             <!-- Display user profile picture -->
                             <img :src="profilePictureUrl" alt="Profile" class="h-10 w-10 rounded-full border-2 border-white shadow-md" />
                             <div class="relative">
