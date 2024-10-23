@@ -99,9 +99,6 @@ data() {
       "17:20 - 18:00"
     ]
   };
-<<<<<<< HEAD
-  </script>
-=======
 },
 computed: {
   weekdays() {
@@ -187,4 +184,3 @@ methods: {
 },
 };
 </script>
->>>>>>> e6e768ccbb93d2cc6e408a67cde87c3e03a0b3a9
