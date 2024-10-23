@@ -12,11 +12,9 @@ class TableController extends Controller
 {
     public function index()
     {
-        // Fetch all table names from the database
         $tables = DB::select('SHOW TABLES');
         $tableNames = array_map(fn($table) => array_values((array)$table)[0], $tables);
 
-        // Exclude specific tables
         $excludeTables = ['cache', 'cache_locks', 'failed_jobs', 'jobs', 'job_batches', 'messages', 'migrations', 'password_reset_tokens', 'sessions'];
         $filteredTables = array_filter($tableNames, fn($table) => !in_array($table, $excludeTables));
 
@@ -78,13 +76,9 @@ class TableController extends Controller
         $data = $request->except(['_token']);
 
         try {
-            // Detect the primary key for the given table
             $primaryKey = $this->getPrimaryKey($table);
-
-            // Ensure that the data doesn't contain the primary key itself to avoid errors
+            // Saprast vai datos nav prim key
             unset($data[$primaryKey]);
-
-            // Update the table using the primary key
             DB::table($table)->where($primaryKey, $id)->update($data);
 
             return response()->json(['message' => 'Data updated successfully!']);

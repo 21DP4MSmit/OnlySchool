@@ -52,10 +52,13 @@
                 </table>
             </div>
 
-            <!-- Insert Data Form for Other Tables -->
+            <!-- Citas tabulas kas nav users -->
+
+             <!-- Ja tabula nav users -->
             <div v-if="selectedTable !== 'users'" class="mt-12 max-w-2xl mx-auto">
                 <h2 class="text-xl font-semibold mb-6 text-center">Insert Data into {{ selectedTable }}</h2>
                 <form @submit.prevent="insertData" class="space-y-4">
+                    <!-- tad katrai field parādīt input  -->
                     <div v-for="field in formFields" :key="field">
                         <label :for="field" class="block text-sm font-medium text-gray-700">{{ field }}:</label>
                         <input v-model="formData[field]" type="text" :id="field" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
@@ -83,8 +86,8 @@ const selectedTable = ref("");
 const tableData = ref([]);
 const formData = reactive({});
 const formFields = ref([]);
-const editRow = ref(null);  // For tracking which row is being edited
-const editedRow = reactive({});  // Store the updated row values
+const editRow = ref(null);  // kuru row tgd edito
+const editedRow = reactive({});  // ieliek updated vērtības
 
 const fetchTableData = async () => {
     if (selectedTable.value) {
@@ -98,40 +101,39 @@ const fetchTableData = async () => {
     }
 };
 
-// Insert data into the selected table
 const insertData = async () => {
     try {
         await axios.post("/table-manager/insert", {
             table: selectedTable.value,
             ...formData,
         });
-        fetchTableData();  // Refresh table data after insertion
-        Object.keys(formData).forEach(key => formData[key] = '');  // Clear form data
+        fetchTableData();  // refresho
+        Object.keys(formData).forEach(key => formData[key] = '');  // tad clearo
     } catch (error) {
         console.error('Error inserting data:', error);
         alert('Failed to insert data: ' + (error.response?.data?.message || error.message));
     }
 };
 
-// Enable editing for a row
+
 const enableEditing = (row) => {
     editRow.value = row[getPrimaryKey()];
-    Object.assign(editedRow, row);  // Populate the editedRow with the current row values
+    Object.assign(editedRow, row);  // ieliek editorā datus
 };
 
-// Update a row based on the primary key
+
 const updateRow = async (id) => {
     try {
         await axios.post(`/table-manager/update/${selectedTable.value}/${id}`, editedRow);
-        editRow.value = null;  // Stop editing
-        fetchTableData();  // Reload the table data
+        editRow.value = null;
+        fetchTableData();  // reload lapu
     } catch (error) {
         console.error('Error updating data:', error);
         alert('Failed to update data: ' + (error.response?.data?.message || error.message));
     }
 };
 
-// Helper method to get the primary key dynamically
+// funkcija lai "dinamiski" dabūtu foreign key
 const getPrimaryKey = () => {
     const primaryKeys = {
         absences: 'AbsenceID',
