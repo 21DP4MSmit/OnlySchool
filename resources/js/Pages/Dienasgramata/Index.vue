@@ -1,7 +1,7 @@
 <template>
   <AuthenticatedLayout>
     <div class="container mx-auto px-4 py-8">
-      <!-- Page Header -->
+      <!-- headeris -->
       <div class="flex justify-between items-center mb-8">
         <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight leading-tight">Dienasgrāmata</h1>
         <span class="text-lg font-semibold text-gray-600 bg-gray-200 py-2 px-4 rounded-lg shadow-sm">
@@ -9,7 +9,7 @@
         </span>
       </div>
 
-      <!-- Week Navigation -->
+      <!-- Navigacija uz next week or prev week -->
       <div class="flex justify-between items-center mb-8">
         <button @click="prevWeek" class="text-4xl text-blue-600 hover:text-blue-700 transition transform hover:scale-105 font-bold">
           &lt;
@@ -22,7 +22,7 @@
         </button>
       </div>
 
-      <!-- Subject Lists by Day -->
+      <!-- stundu saraksta list -->
       <div v-for="(subjectLists, day) in weekdays" :key="day" class="mb-12">
         <h2 class="text-3xl font-semibold text-gray-800 mb-6">{{ day }}</h2>
 
@@ -91,7 +91,7 @@ props: {
 data() {
   return {
     currentDate: '',
-    currentWeekStart: startOfWeek(new Date(), { weekStartsOn: 1 }), // Start from Monday
+    currentWeekStart: startOfWeek(new Date(), { weekStartsOn: 1 }), // lai saktos no pirmdienas + stundu laiki
     lessonTimes: [
       "07:45 - 08:25", "08:30 - 09:10", "09:15 - 09:55", "10:10 - 10:50",
       "10:55 - 11:35", "12:05 - 12:45", "12:50 - 13:30", "13:35 - 14:15",
@@ -114,18 +114,18 @@ computed: {
     return this.subjectLists.reduce((groups, subjectList) => {
       const lessonDate = new Date(subjectList.Date);
 
-      // Ensure no time component and no timezone shifts in comparisons
+      // sitas prieks datumiem lai no db nečakarējās
       const normalizedLessonDate = new Date(lessonDate.toISOString().split('T')[0]);
       const normalizedWeekStart = new Date(this.currentWeekStart.toISOString().split('T')[0]);
       const normalizedWeekEnd = new Date(normalizedWeekStart);
 
-      // **Changed here to include Friday**
-      normalizedWeekEnd.setDate(normalizedWeekEnd.getDate() + 5); // Monday-Friday range
+      
+      normalizedWeekEnd.setDate(normalizedWeekEnd.getDate() + 5); // hard fixed pirmdiena-piektdiena
 
       console.log(`Checking lesson: ${subjectList.subject.Name} Date: ${normalizedLessonDate}`);
       console.log(`Week range: ${normalizedWeekStart} - ${normalizedWeekEnd}`);
       
-      // Compare normalized dates to filter lessons
+      // datums = kada stunda ielikta
       if (normalizedLessonDate >= normalizedWeekStart && normalizedLessonDate <= normalizedWeekEnd) {
         const day = normalizedLessonDate.toLocaleDateString('en-US', { weekday: 'long' });
         if (!groups[day]) {
@@ -138,7 +138,7 @@ computed: {
   },
   formattedWeekRange() {
     const start = format(this.currentWeekStart, 'dd.MM.yyyy');
-    const end = format(addDays(this.currentWeekStart, 5), 'dd.MM.yyyy'); // **Changed here to include Friday**
+    const end = format(addDays(this.currentWeekStart, 5), 'dd.MM.yyyy'); // bija bug, pielikts lai piektdiena rādītos
     return `${start} - ${end}`;
   },
 },
