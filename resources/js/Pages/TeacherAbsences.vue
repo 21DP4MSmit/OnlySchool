@@ -1,7 +1,7 @@
 <script setup>
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     import { Head } from '@inertiajs/vue3';
-    import TeacherAbsencesMark from '@/Components/TeacherAbsencesMark.vue';
+
 </script>
 
 <template>
@@ -10,7 +10,11 @@
     <AuthenticatedLayout>
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <TeacherAbsencesMark />
+                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                    <div id="app">
+                        <TeacherAbsencesMark :subjectLists="subjectLists" />
+                    </div>
+                </div>
             </div>
         </div>
     </AuthenticatedLayout>

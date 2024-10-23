@@ -6,37 +6,44 @@ use Illuminate\Http\Request;
 use App\Models\SubjectList;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Inertia\Inertia;
 
 class DienasgramataController extends Controller
 {
-    
-
+    // For Dienasgramata
     public function index(Request $request)
-{
-    // Get the user's class ID
-    $classId = Auth::user()->class_id;
+    {
+        return $this->fetchSubjectLists($request, 'Dienasgramata/Index');
+    }
 
-    // If a week start date is provided, use it, else use the current week
-    $weekStart = $request->input('weekStart') 
-                ? Carbon::parse($request->input('weekStart'))
-                : Carbon::now()->startOfWeek(Carbon::MONDAY);
-    
-    // Set the end of the week (Friday)
-    $weekEnd = $weekStart->copy()->endOfWeek(Carbon::FRIDAY);
-    
-    // Fetch subject lists for the specified week
-    $subjectLists = SubjectList::where('ClassID', $classId)
-                        ->whereBetween('Date', [$weekStart, $weekEnd])
-                        ->with('subject', 'classroom', 'marks', 'absences')
-                        ->get();
+    // For Teacher Absences (separate component)
+    public function teacherAbsences(Request $request)
+    {
+        return $this->fetchSubjectLists($request, 'TeacherAbsences/Index');
+    }
 
-    return inertia('Dienasgramata/Index', [
-        'subjectLists' => $subjectLists,
-        'weekStart' => $weekStart->toDateString(), // Pass weekStart back to the frontend
-    ]);
-}
-    
+    private function fetchSubjectLists(Request $request, string $component)
+    {
+        // Fetch authenticated user's class ID
+        $classId = Auth::user()->class_id;
 
+        // Start of the week (Monday)
+        $weekStart = $request->input('weekStart') 
+                    ? Carbon::parse($request->input('weekStart'))
+                    : Carbon::now()->startOfWeek(Carbon::MONDAY);
 
+        // End of the week (Friday)
+        $weekEnd = $weekStart->copy()->endOfWeek(Carbon::FRIDAY);
+        
+        // Fetch subject lists for the week
+        $subjectLists = SubjectList::where('ClassID', $classId)
+                            ->whereBetween('Date', [$weekStart, $weekEnd])
+                            ->with('subject', 'classroom', 'marks', 'absences')
+                            ->get();
 
+        return Inertia::render($component, [
+            'subjectLists' => $subjectLists,
+            'weekStart' => $weekStart->toDateString(), 
+        ]);
+    }
 }

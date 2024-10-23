@@ -1,9 +1,6 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\docker",
-    "\\docker\\php"
+    ""
   ],
-  "SelectedNode": "\\docker\\php\\local.ini",
   "PreviewInSolutionExplorer": false
 }
