@@ -58,7 +58,7 @@ Route::middleware('auth')->group(function () {
         // Dashboard Route
         Route::get('/dashboard', function () {
             return Inertia::render('Dashboard');
-        })->name('dashboard');
+        })->name('dienasgramata.index');
 
         // Route for Dienasgramata
         Route::get('/dienasgramata', [DienasgramataController::class, 'index'])->name('dienasgramata.index');

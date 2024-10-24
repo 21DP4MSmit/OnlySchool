@@ -7,13 +7,13 @@
                 <div class="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between items-center">
                         <div class="flex items-center">
-                            <a href="/dashboard" class="flex items-center cursor-pointer">
+                            <a href="/dienasgramata" class="flex items-center cursor-pointer">
                                 <ApplicationLogo class="block h-10 w-auto fill-current text-white" />
                                 <h1 class="text-3xl font-bold ms-3 leading-7">OnlySchool</h1>
                             </a>
 
                             <div class="hidden space-x-8 sm:flex sm:ms-10">
-                                <Link href="/dashboard" class="text-white hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
+                                <Link href="/dienasgramata" class="text-white hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
                                     Sākums
                                 </Link>
                                 <Link href="/dienasgramata" class="text-white hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">

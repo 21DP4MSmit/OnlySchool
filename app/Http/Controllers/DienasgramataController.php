@@ -131,4 +131,8 @@ public function teacherDashboard(Request $request)
         'todayClasses' => $todayClasses,
     ]);
 }
+public function teacherAbsences(Request $request)
+    {
+        return $this->fetchSubjectLists($request, 'TeacherAbsences/Index');
+    }
 }
