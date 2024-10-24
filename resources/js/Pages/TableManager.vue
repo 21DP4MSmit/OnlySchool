@@ -55,14 +55,27 @@
             <!-- Citas tabulas kas nav users -->
 
              <!-- Ja tabula nav users -->
-            <div v-if="selectedTable !== 'users'" class="mt-12 max-w-2xl mx-auto">
+             <div class="mt-12 max-w-2xl mx-auto">
                 <h2 class="text-xl font-semibold mb-6 text-center">Insert Data into {{ selectedTable }}</h2>
                 <form @submit.prevent="insertData" class="space-y-4">
                     <!-- tad katrai field parādīt input  -->
                     <div v-for="field in formFields" :key="field">
                         <label :for="field" class="block text-sm font-medium text-gray-700">{{ field }}:</label>
-                        <input v-model="formData[field]" type="text" :id="field" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        
+                        <!-- Dropdown for the role field -->
+                        <div v-if="field === 'role'">
+                            <select v-model="formData[field]" :id="field" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="user">User</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+
+                        <!-- Input for other fields -->
+                        <div v-else>
+                            <input v-model="formData[field]" type="text" :id="field" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        </div>
                     </div>
+
                     <div class="text-center">
                         <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-md shadow-sm">
                             Insert Data
@@ -103,12 +116,19 @@ const fetchTableData = async () => {
 
 const insertData = async () => {
     try {
-        await axios.post("/table-manager/insert", {
-            table: selectedTable.value,
-            ...formData,
-        });
-        fetchTableData();  // refresho
-        Object.keys(formData).forEach(key => formData[key] = '');  // tad clearo
+        if (selectedTable.value === 'users') {
+            await axios.post("/table-manager/insert-user", {
+                table: selectedTable.value,
+                ...formData,
+            });
+        } else {
+            await axios.post("/table-manager/insert", {
+                table: selectedTable.value,
+                ...formData,
+            });
+        }
+        fetchTableData();  // refresh table data
+        Object.keys(formData).forEach(key => formData[key] = '');  // clear form data
     } catch (error) {
         console.error('Error inserting data:', error);
         alert('Failed to insert data: ' + (error.response?.data?.message || error.message));
