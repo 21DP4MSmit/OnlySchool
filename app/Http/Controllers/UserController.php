@@ -11,16 +11,16 @@ class UserController extends Controller
     public function getUsersByClass($classroomId)
 {
     try {
-        $class = Classroom::where('classID', $classroomId)->first();  // Check if the classroom exists
+        $class = Classroom::where('classID', $classroomId)->first();  
 
         if ($class) {
-            $users = User::where('class_id', $class->id)->get();  // Ensure the correct class_id is used
+            $users = User::where('class_id', $class->id)->get();  
 
             if ($users->isEmpty()) {
                 return response()->json(['message' => 'No students found for this class.'], 404);
             }
 
-            return response()->json($users);  // Return users for the class
+            return response()->json($users); 
         } else {
             return response()->json(['message' => 'Class not found.'], 404);
         }

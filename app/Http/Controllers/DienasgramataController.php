@@ -92,26 +92,19 @@ return inertia('Dienasgramata/Index', [
 
 public function todayClasses(Request $request)
 {
-    try {
-        $teacherId = Auth::id();
-        $today = Carbon::today();
+    $teacherId = Auth::id(); 
+    $today = Carbon::today(); 
 
-        $todayClasses = SubjectList::whereHas('classroom', function($query) use ($teacherId) {
-                $query->where('UserID', $teacherId);
-            })
-            ->whereDate('Date', $today)
-            ->with(['subject', 'classroom'])
-            ->get();
+    $todayClasses = SubjectList::whereHas('classroom', function ($query) use ($teacherId) {
+        $query->where('UserID', $teacherId); 
+    })
+    ->whereDate('Date', $today) 
+    ->with(['subject', 'classroom']) 
+    ->get();
 
-        \Log::info('Today\'s Classes:', ['todayClasses' => $todayClasses->toArray()]);
-
-        return inertia('TeacherDashboard/Index', [
-            'todayClasses' => $todayClasses->toArray(),
-        ]);
-    } catch (\Exception $e) {
-        \Log::error('Error fetching today\'s classes: ' . $e->getMessage());
-        return response()->json(['error' => 'Failed to fetch today\'s classes.'], 500);
-    }
+    return inertia('TeacherDashboard/Index', [
+        'todayClasses' => $todayClasses->toArray(), 
+    ]);
 }
 
 
