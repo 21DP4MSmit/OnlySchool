@@ -35,6 +35,3 @@ class SubjectList extends Model
                     ->where('UserID', auth()->id());
     }
 }
-
-
-

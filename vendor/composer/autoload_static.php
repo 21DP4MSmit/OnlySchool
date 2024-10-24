@@ -540,6 +540,7 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         'App\\Http\\Controllers\\DienasgramataController' => __DIR__ . '/../..' . '/app/Http/Controllers/DienasgramataController.php',
         'App\\Http\\Controllers\\MessageController' => __DIR__ . '/../..' . '/app/Http/Controllers/MessageController.php',
         'App\\Http\\Controllers\\ProfileController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProfileController.php',
+        'App\\Http\\Controllers\\StudentDashboardController' => __DIR__ . '/../..' . '/app/Http/Controllers/StudentDashboardController.php',
         'App\\Http\\Controllers\\TableController' => __DIR__ . '/../..' . '/app/Http/Controllers/TableController.php',
         'App\\Http\\Controllers\\UserController' => __DIR__ . '/../..' . '/app/Http/Controllers/UserController.php',
         'App\\Http\\Middleware\\HandleInertiaRequests' => __DIR__ . '/../..' . '/app/Http/Middleware/HandleInertiaRequests.php',

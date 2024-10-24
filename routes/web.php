@@ -43,9 +43,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/TeacherAbsences', [DienasgramataController::class, 'teacherAbsences'])->name('teacher.absences.index');
 
         
-        Route::get('/TeacherClasses', function () {
-            return Inertia::render('TeacherClasses');
-        })->name('TeachClasses');
+        Route::get('/TeacherClasses', [DienasgramataController::class, 'teacherClasses'])->name('teacher.classes.index');
+
+        Route::get('/TeacherDashboard', [DienasgramataController::class, 'teacherDashboard'])->name('teacher.dashboard');
+
+
+
 
     });
 

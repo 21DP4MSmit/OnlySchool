@@ -21,6 +21,7 @@ return array(
     'App\\Http\\Controllers\\DienasgramataController' => $baseDir . '/app/Http/Controllers/DienasgramataController.php',
     'App\\Http\\Controllers\\MessageController' => $baseDir . '/app/Http/Controllers/MessageController.php',
     'App\\Http\\Controllers\\ProfileController' => $baseDir . '/app/Http/Controllers/ProfileController.php',
+    'App\\Http\\Controllers\\StudentDashboardController' => $baseDir . '/app/Http/Controllers/StudentDashboardController.php',
     'App\\Http\\Controllers\\TableController' => $baseDir . '/app/Http/Controllers/TableController.php',
     'App\\Http\\Controllers\\UserController' => $baseDir . '/app/Http/Controllers/UserController.php',
     'App\\Http\\Middleware\\HandleInertiaRequests' => $baseDir . '/app/Http/Middleware/HandleInertiaRequests.php',

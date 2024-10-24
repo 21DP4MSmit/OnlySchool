@@ -9,12 +9,7 @@ export default defineConfig({
             refresh: true,
         }),
         vue({
-            template: {
-                transformAssetUrls: {
-                    base: null,
-                    includeAbsolute: false,
-                },
-            },
+            include: [/\.vue$/], // Ensure Vue plugin handles .vue files
         }),
     ],
 });

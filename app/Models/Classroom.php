@@ -9,20 +9,27 @@ class Classroom extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'ClassroomID';
+    protected $primaryKey = 'id'; 
 
     protected $fillable = [
-        'classID',
-        'studentID',
+        'ClassID',
+        'UserID',
+        'Classroom',
     ];
+
 
     public function class()
     {
         return $this->belongsTo(Klase::class, 'ClassID');
     }
-    public function student()
+
+    public function teacher()
     {
-        return $this->belongsTo(User::class, 'StudentID');
+        return $this->belongsTo(User::class, 'UserID');
     }
 
+    public function subjectLists()
+    {
+        return $this->hasMany(SubjectList::class, 'ClassroomID', 'id');
+    }
 }
