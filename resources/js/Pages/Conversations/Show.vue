@@ -34,7 +34,9 @@
                         </div>
 
                         <!-- Message Text -->
-                        <p class="bg-gray-100 p-3 rounded-lg mt-1 text-gray-900">{{ message.text }}</p>
+                        <p class="bg-gray-100 p-3 rounded-lg mt-1 text-gray-900 break-all max-w-full">
+                            {{ message.text }}
+                        </p>
 
                         <!-- Attachments -->
                         <div v-if="message.attachments" class="mt-2 space-y-2">
@@ -71,11 +73,12 @@
             </div>
 
             <form @submit.prevent="sendMessage" class="mt-6 flex items-center space-x-2">
-                <input 
+                <textarea 
                     v-model="text" 
                     placeholder="Type a message..." 
-                    class="flex-grow border rounded-lg px-4 py-2"
-                />
+                    class="flex-grow border rounded-lg px-4 py-2 max-h-32 overflow-y-auto resize-y"
+                    @keypress.enter.prevent="sendMessage"
+                ></textarea>
                 <label for="file-upload" class="cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-gray-600 hover:text-gray-800 transition duration-200">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16 12V8a4 4 0 00-8 0v6a4 4 0 008 0V10m-4 2v6" />
@@ -175,7 +178,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </AuthenticatedLayout>
 </template>
