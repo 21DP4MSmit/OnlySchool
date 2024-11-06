@@ -5,11 +5,26 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+import Echo from "laravel-echo";
+import Pusher from "pusher-js";
 
-// Import the AuthenticatedLayout component globally
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const appName = import.meta.env.VITE_APP_NAME;
+
+window.Pusher = Pusher;
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: import.meta.env.VITE_PUSHER_APP_KEY,
+    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+    wsHost: import.meta.env.VITE_PUSHER_HOST || '127.0.0.1',
+    wsPort: 6001,
+    wssPort: 6001,
+    forceTLS: false,
+    enabledTransports: ['ws', 'wss'],
+    disableStats: true,
+});
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -20,8 +35,6 @@ createInertiaApp({
         ),
     setup({ el, App, props, plugin }) {
         const app = createApp({ render: () => h(App, props) });
-
-        // Register AuthenticatedLayout globally
         app.component('AuthenticatedLayout', AuthenticatedLayout);
 
         return app

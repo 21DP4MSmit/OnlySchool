@@ -9,13 +9,23 @@
             </button>
 
             <button 
+                @click="deleteConversation"
+                class="ml-4 mb-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+            >
+                Dzēst saraksti
+            </button>
+
+            <button 
                 @click="showParticipants"
                 class="ml-4 mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300"
             >
                 Skatīt dalībnieku
             </button>
 
-            <h1 class="text-3xl font-bold mb-6">{{ conversation.subject || 'Conversation' }}</h1>
+            <h1 class="text-3xl font-bold mb-6">
+                {{ isGroupChat ? conversation.subject || 'Conversation' : getOtherParticipantName }}
+                <span v-if="isGroupChat" class="group-icon">👥</span>
+            </h1>
 
             <div ref="chatContainer" class="border border-gray-300 rounded-lg p-4 max-h-96 overflow-y-auto space-y-6">
                 <div v-for="(message, index) in conversation.messages" :key="message.id" class="flex space-x-4 items-start">
@@ -120,6 +130,7 @@
                 </div>
             </div>
 
+            <!-- Participants Modal -->
             <div v-if="participantsVisible" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
                 <div class="bg-white rounded-lg p-6 w-full max-w-lg">
                     <div class="flex justify-between items-center mb-4">
@@ -134,11 +145,23 @@
                                 class="w-10 h-10 rounded-full object-cover"
                             />
                             <p class="text-gray-800">{{ participant.name }}</p>
+                            
+                            <!-- Show Remove button if this is a group chat, there are more than two participants, and the participant is not the current user -->
+                            <button 
+                                v-if="isGroupChat && conversation.participants.length > 2 && participant.id !== $page.props.auth.user.id" 
+                                @click="removeParticipant(participant.id)" 
+                                class="text-red-500 text-sm hover:text-red-700 ml-auto"
+                            >
+                                Remove
+                            </button>
+                            <span v-if="isGroupChat">[Debug: Group Chat Detected]</span>
                         </li>
                     </ul>
                 </div>
             </div>
 
+
+            <!-- Expanded Image Modal -->
             <div v-if="expandedImages.length" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
                 <div class="absolute top-4 left-4 text-white text-lg">
                     {{ expandedImages[expandedImageIndex].split('/').pop() }}
@@ -188,6 +211,8 @@ import { format } from 'date-fns';
 import fileIcon from '@/assets/file-icon.png'; 
 import downloadIcon from '@/assets/download-icon.png'; 
 import closeIcon from '@/assets/close-icon.png';
+import Echo from "laravel-echo";
+import Pusher from "pusher-js";
 
 export default {
     props: {
@@ -207,21 +232,21 @@ export default {
     },
     methods: {
         goBack() {
-            this.$inertia.get(route('conversations.index'));
+            this.$inertia.visit(route('conversations.index'));
+        },
+        deleteConversation() {
+            if (confirm("Are you sure you want to delete this conversation?")) {
+                this.$inertia.delete(route('conversations.destroy', this.conversation.id));
+            }
         },
         getProfilePicture(profilePicturePath) {
-            if (profilePicturePath) {
-                return `/storage/${profilePicturePath}`; 
-            } else {
-                return 'https://via.placeholder.com/40';
-            }
+            return profilePicturePath ? `/storage/${profilePicturePath}` : 'https://via.placeholder.com/40';
         },
         handleFileUpload(event) {
             const files = event.target.files;
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
+            for (let file of files) {
                 this.attachments.push({
-                    file: file,
+                    file,
                     preview: URL.createObjectURL(file),
                     name: file.name,
                 });
@@ -230,6 +255,18 @@ export default {
         },
         removeAttachment(index) {
             this.attachments.splice(index, 1);
+        },
+        listenForMessages() {
+            if (!window.Echo) {
+                console.error('Echo is not defined. Check the Echo setup.');
+                return;
+            }
+
+            window.Echo.channel(`conversation.${this.conversation.id}`)
+                .listen("MessageSent", (event) => {
+                    this.conversation.messages.push(event.message);
+                    this.scrollToBottom();
+                });
         },
         sendMessage() {
             const formData = new FormData();
@@ -247,22 +284,38 @@ export default {
                 },
             });
         },
-        parseAttachments(attachments) {
-            try {
-                return typeof attachments === 'string' ? JSON.parse(attachments) : attachments;
-            } catch (error) {
-                console.error('Failed to parse attachments:', error);
-                return [];
-            }
+        removeParticipant(userId) {
+            this.$inertia.post(route('conversations.remove-participant', this.conversation.id), { user_id: userId }, {
+                onSuccess: () => {
+                    this.conversation.participants = this.conversation.participants.filter(p => p.id !== userId);
+                    this.participantsVisible = false;
+                },
+                onError: () => {
+                    console.error("Failed to remove participant.");
+                },
+            });
         },
+
         scrollToBottom() {
             const chatContainer = this.$refs.chatContainer;
             if (chatContainer) {
                 chatContainer.scrollTop = chatContainer.scrollHeight;
             }
         },
-        formatTimestamp(timestamp) {
-            return format(new Date(timestamp), 'PPpp');
+        showParticipants() {
+            this.participantsVisible = true;
+        },
+        closeParticipants() {
+            this.participantsVisible = false;
+        },
+        openImageModal(index, attachments) {
+            const parsedAttachments = Array.isArray(attachments) ? attachments : this.parseAttachments(attachments);
+            this.expandedImages = parsedAttachments.filter(this.isImage);
+            this.expandedImageIndex = index;
+        },
+        closeImageModal() {
+            this.expandedImages = [];
+            this.expandedImageIndex = 0;
         },
         isImage(file) {
             const imageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
@@ -271,44 +324,25 @@ export default {
                 : file.split('.').pop().toLowerCase();
             return imageExtensions.includes(extension);
         },
+        formatTimestamp(timestamp) {
+            return format(new Date(timestamp), 'PPpp');
+        },
         truncateFileName(fileName) {
-            if (fileName.length > 30) {
-                return fileName.substring(0, 27) + '...';
-            }
-            return fileName;
+            return fileName.length > 30 ? `${fileName.substring(0, 27)}...` : fileName;
+        }
+    },
+    computed: {
+        isGroupChat() {
+            return this.conversation.initialParticipantCount > 2;
         },
-        openImageModal(index, attachments) {
-            const parsedAttachments = Array.isArray(attachments) ? attachments : this.parseAttachments(attachments);
-            this.expandedImages = parsedAttachments.filter((attachment) => this.isImage(attachment));
-            this.expandedImageIndex = index;
-        },
-        closeImageModal() {
-            this.expandedImages = [];
-            this.expandedImageIndex = 0;
-        },
-
-        prevImage() {
-            if (this.expandedImageIndex > 0) {
-                this.expandedImageIndex -= 1;
-            }
-        },
-        nextImage() {
-            if (this.expandedImageIndex < this.expandedImages.length - 1) {
-                this.expandedImageIndex += 1;
-            }
-        },
-        handleImageError(event) {
-            event.target.src = 'https://via.placeholder.com/40';
-        },
-        showParticipants() {
-            this.participantsVisible = true;
-        },
-        closeParticipants() {
-            this.participantsVisible = false;
-        },
+        getOtherParticipantName() {
+            const otherParticipants = this.conversation.participants.filter(p => p.id !== this.$page.props.auth.user.id);
+            return otherParticipants[0]?.name || 'Unknown Participant'; // Safely handle the case where there is no other participant
+        }
     },
     mounted() {
+        this.listenForMessages();
         this.scrollToBottom();
-    },
+    }
 };
 </script>

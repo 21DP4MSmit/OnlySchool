@@ -20,6 +20,9 @@
     "dependencies": {
         "@inertiajs/inertia-vue3": "^0.6.0",
         "date-fns": "^4.1.0",
+        "laravel-echo": "^1.16.1",
+        "laravel-echo-server": "^1.6.3",
+        "pusher-js": "^8.4.0-rc2",
         "ziggy": "^2.4.0",
         "ziggy-js": "github:tightenco/ziggy"
     }

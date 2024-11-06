@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Message;
 use App\Models\Conversation;
-
+use App\Events\MessageSent;
 
 class MessageController extends Controller
 {
@@ -32,7 +32,13 @@ class MessageController extends Controller
 
         $message->save();
 
-        return redirect()->back();
-    }
+        // Broadcast the MessageSent event
+        broadcast(new MessageSent($message))->toOthers();
 
+        if ($request->wantsJson()) {
+            return response()->json($message);
+        }
+
+        return redirect()->route('conversations.show', $conversation->id);
+    }
 }
