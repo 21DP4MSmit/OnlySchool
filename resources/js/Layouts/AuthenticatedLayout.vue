@@ -13,7 +13,7 @@
                             </a>
 
                             <div class="hidden space-x-8 sm:flex sm:ms-10">
-                                <Link href="/dienasgramata" class="text-white hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
+                                <Link href="/dashboard" class="text-white hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
                                     Sākums
                                 </Link>
                                 <Link href="/dienasgramata" class="text-white hover:text-yellow-300 transition duration-300 ease-in-out text-lg cursor-pointer">
