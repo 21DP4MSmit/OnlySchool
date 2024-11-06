@@ -9,6 +9,8 @@ class Klase extends Model
 {
     use HasFactory;
 
+    protected $table = 'klase';
+
     protected $fillable = ['Department'];
 
     public function subjectLists()

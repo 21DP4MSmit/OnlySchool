@@ -34,4 +34,9 @@ class SubjectList extends Model
         return $this->hasMany(Absence::class, 'SubjectID', 'SubjectID')
                     ->where('UserID', auth()->id());
     }
+
+    public function klase()
+{
+    return $this->belongsTo(Klase::class, 'ClassID', 'ClassID');
+}
 }

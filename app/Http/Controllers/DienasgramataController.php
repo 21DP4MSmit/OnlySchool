@@ -62,27 +62,29 @@ return inertia('Dienasgramata/Index', [
         }
     }
 
-    public function teacherClasses(Request $request)
+public function teacherClasses(Request $request)
 {
     try {
-        $weekStart = Carbon::now()->startOfWeek();
-        $weekEnd = Carbon::now()->endOfWeek();
+        $weekStart = $request->input('weekStart') 
+            ? Carbon::parse($request->input('weekStart'))
+            : Carbon::now()->startOfWeek(Carbon::MONDAY);
         
-        // Get the currently logged-in user ID
+        $weekEnd = $weekStart->copy()->endOfWeek(Carbon::FRIDAY);
+
         $userId = Auth::user()->id;
 
-        // Only select the classrooms that match the current user's ID
         $subjectLists = SubjectList::whereBetween('Date', [$weekStart, $weekEnd])
             ->whereHas('classroom', function($query) use ($userId) {
                 $query->where('UserID', $userId);
             })
-            ->with('subject', 'classroom', 'marks', 'absences')
+            ->with('subject', 'classroom', 'marks', 'absences', 'klase')
             ->get();
 
         \Log::info('Subject Lists:', ['subjectLists' => $subjectLists]);
 
         return inertia('TeacherClasses/Index', [
-            'classes' => $subjectLists,  // Pass filtered subject lists
+            'classes' => $subjectLists,
+            'weekStart' => $weekStart->toDateString(),
         ]);
     } catch (\Exception $e) {
         \Log::error('Error fetching teacher classes: ' . $e->getMessage());
