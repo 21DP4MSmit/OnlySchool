@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Classroom;
 use App\Models\SubjectList;
+use App\Models\Absence;
+use App\Models\Mark;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Inertia\Inertia;
@@ -127,7 +129,39 @@ public function teacherDashboard(Request $request)
     ]);
 }
 public function teacherAbsences(Request $request)
-    {
-        return $this->fetchSubjectLists($request, 'TeacherAbsences/Index');
+{
+    try {
+        $userId = Auth::user()->id;
+        $weekStart = $request->input('weekStart')
+            ? Carbon::parse($request->input('weekStart'))
+            : Carbon::now()->startOfWeek(Carbon::MONDAY);
+        $weekEnd = $weekStart->copy()->endOfWeek(Carbon::FRIDAY);
+
+        $subjectLists = SubjectList::whereBetween('Date', [$weekStart, $weekEnd])
+            ->whereHas('classroom', function ($query) use ($userId) {
+                $query->where('UserID', $userId);
+            })
+            ->with('subject', 'classroom', 'marks', 'absences', 'klase')
+            ->get();
+
+        $absenceData = Absence::whereBetween('date', [$weekStart, $weekEnd])
+            ->whereIn('SubjectID', $subjectLists->pluck('SubjectID'))
+            ->get();
+
+        $markData = Mark::whereBetween('date', [$weekStart, $weekEnd])
+            ->whereIn('SubjectID', $subjectLists->pluck('SubjectID'))
+            ->get();
+
+        return inertia('TeacherAbsences/Index', [
+            'subjectLists' => $subjectLists,
+            'weekStart' => $weekStart->toDateString(),
+            'absenceData' => $absenceData,
+            'markData' => $markData,
+        ]);
+    } catch (\Exception $e) {
+        \Log::error('Error fetching teacher absences: ' . $e->getMessage());
+        return response()->json(['error' => 'Failed to fetch teacher absences.'], 500);
     }
+}
+
 }
