@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Events\\MessageSent' => $baseDir . '/app/Events/MessageSent.php',
     'App\\Http\\Controllers\\AbsenceController' => $baseDir . '/app/Http/Controllers/AbsenceController.php',
     'App\\Http\\Controllers\\Auth\\AuthenticatedSessionController' => $baseDir . '/app/Http/Controllers/Auth/AuthenticatedSessionController.php',
     'App\\Http\\Controllers\\Auth\\ConfirmablePasswordController' => $baseDir . '/app/Http/Controllers/Auth/ConfirmablePasswordController.php',
@@ -38,7 +39,9 @@ return array(
     'App\\Models\\Subject' => $baseDir . '/app/Models/Subject.php',
     'App\\Models\\SubjectList' => $baseDir . '/app/Models/SubjectList.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
+    'App\\Policies\\ConversationPolicy' => $baseDir . '/app/Policies/ConversationPolicy.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',
+    'App\\Providers\\AuthServiceProvider' => $baseDir . '/app/Providers/AuthServiceProvider.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'Brick\\Math\\BigDecimal' => $vendorDir . '/brick/math/src/BigDecimal.php',
     'Brick\\Math\\BigInteger' => $vendorDir . '/brick/math/src/BigInteger.php',
