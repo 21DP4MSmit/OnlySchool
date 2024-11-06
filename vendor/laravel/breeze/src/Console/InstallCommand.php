@@ -323,6 +323,10 @@ class InstallCommand extends Command implements PromptsForMissingInput
      */
     protected function phpBinary()
     {
+        if (function_exists('Illuminate\Support\php_binary')) {
+            return \Illuminate\Support\php_binary();
+        }
+
         return (new PhpExecutableFinder)->find(false) ?: 'php';
     }
 
@@ -401,7 +405,8 @@ class InstallCommand extends Command implements PromptsForMissingInput
                     'ssr' => 'Inertia SSR',
                     'typescript' => 'TypeScript',
                     'eslint' => 'ESLint with Prettier',
-                ]
+                ],
+                hint: 'Use the space bar to select options.'
             ))->each(fn ($option) => $input->setOption($option, true));
         } elseif (in_array($stack, ['blade', 'livewire', 'livewire-functional'])) {
             $input->setOption('dark', confirm(
