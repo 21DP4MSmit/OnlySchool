@@ -49,7 +49,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/dashboard', function () {
             return Inertia::render('Dashboard');
-        })->name('dienasgramata.index');
+        })->name('dashboard');
 
         Route::get('/dienasgramata', [DienasgramataController::class, 'index'])->name('dienasgramata.index');
 
@@ -65,6 +65,9 @@ Route::middleware('auth')->group(function () {
         Route::post('conversations/{conversation}/messages', [MessageController::class, 'store'])->name('messages.store');
         Route::post('/conversations/leave', [ConversationController::class, 'leave'])->name('conversations.leave');
         Route::post('messages/{message}/read', [MessageController::class, 'markAsRead'])->name('messages.read');
+
+        Route::post('/conversations/{conversation}/remove-participant', [ConversationController::class, 'removeParticipant'])->name('conversations.remove-participant');
+        Route::delete('/conversations/{conversation}', [ConversationController::class, 'destroy'])->name('conversations.destroy');
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
