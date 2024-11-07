@@ -72,7 +72,6 @@ public function teacherClasses(Request $request)
             : Carbon::now()->startOfWeek(Carbon::MONDAY);
         
         $weekEnd = $weekStart->copy()->endOfWeek(Carbon::FRIDAY);
-
         $userId = Auth::user()->id;
 
         $subjectLists = SubjectList::whereBetween('Date', [$weekStart, $weekEnd])
@@ -88,6 +87,7 @@ public function teacherClasses(Request $request)
             'classes' => $subjectLists,
             'weekStart' => $weekStart->toDateString(),
         ]);
+        
     } catch (\Exception $e) {
         \Log::error('Error fetching teacher classes: ' . $e->getMessage());
         return response()->json(['error' => 'Failed to fetch teacher classes.'], 500);
@@ -96,38 +96,49 @@ public function teacherClasses(Request $request)
 
 public function todayClasses(Request $request)
 {
-    $teacherId = Auth::id(); 
-    $today = Carbon::today(); 
+    try {
+        $today = Carbon::today();
+        $userId = Auth::user()->id;
 
-    $todayClasses = SubjectList::whereHas('classroom', function ($query) use ($teacherId) {
-        $query->where('UserID', $teacherId); 
-    })
-    ->whereDate('Date', $today) 
-    ->with(['subject', 'classroom']) 
-    ->get();
+        $subjectLists = SubjectList::whereDate('Date', $today)
+            ->whereHas('classroom', function($query) use ($userId) {
+                $query->where('UserID', $userId);
+            })
+            ->with('subject', 'classroom', 'marks', 'absences', 'klase')
+            ->get();
 
-    return inertia('TeacherDashboard/Index', [
-        'todayClasses' => $todayClasses->toArray(), 
-    ]);
+        \Log::info('Today’s Classes:', ['subjectLists' => $subjectLists]);
+
+        return inertia('TeacherDashboard/TodayIndex', [
+            'teacherClasses' => $subjectLists->toArray(),
+        ]);
+        
+    } catch (\Exception $e) {
+        \Log::error('Error fetching today’s classes: ' . $e->getMessage());
+        return response()->json(['error' => 'Failed to fetch today’s classes.'], 500);
+    }
 }
-
 
 public function teacherDashboard(Request $request)
 {
+    // Fetch the classes data you want for the dashboard, such as today’s classes
+    // Adjust this as necessary based on your data requirements
+    $userId = Auth::user()->id;
     $today = Carbon::today();
-    $teacherId = Auth::id(); 
 
-    $todayClasses = SubjectList::whereHas('classroom', function($query) use ($teacherId) {
-            $query->where('UserID', $teacherId); 
+    $subjectLists = SubjectList::whereDate('Date', $today)
+        ->whereHas('classroom', function($query) use ($userId) {
+            $query->where('UserID', $userId);
         })
-        ->whereDate('Date', $today) 
-        ->with(['subject', 'classroom']) 
+        ->with(['subject', 'classroom'])
         ->get();
 
-    return Inertia::render('TeacherDashboard/Index', [
-        'todayClasses' => $todayClasses,
+    return Inertia::render('TeacherDashboard/TodayIndex', [
+        'teacherClasses' => $subjectLists->toArray(),
     ]);
 }
+
+
 public function teacherAbsences(Request $request)
 {
     try {

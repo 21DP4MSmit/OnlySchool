@@ -30,10 +30,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/save-absences', [\App\Http\Controllers\AbsenceController::class, 'saveAbsences']);
 
 
-
-        Route::get('/TeacherDashboard', function () {
-            return Inertia::render('TeacherDashboard');
-        })->name('TeachBoard');
         
         Route::get('/TeacherAbsences', [DienasgramataController::class, 'teacherAbsences'])->name('teacher.absences.index');
 

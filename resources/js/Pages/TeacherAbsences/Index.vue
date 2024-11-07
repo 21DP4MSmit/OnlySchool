@@ -2,7 +2,7 @@
     <AuthenticatedLayout>
         <div class="container mx-auto px-4 py-8">
             <div class="flex justify-between items-center mb-8">
-                <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight leading-tight">Teacher Absences</h1>
+                <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight leading-tight">Atzīmēšana</h1>
                 <span class="text-lg font-semibold text-gray-600 bg-gray-200 py-2 px-4 rounded-lg shadow-sm">
                     {{ currentDate }} (Šodien)
                 </span>

@@ -87,7 +87,7 @@
     const urls = computed(() => {
         const isTeacher = page.props.auth.user.role === 'admin';
         return {
-            home: isTeacher ? '/TeacherDashboard' : '/dashboard',
+            home: isTeacher ? '/TeacherClasses' : '/dashboard',
             dienasgramata: isTeacher ? '/TeacherClasses' : '/dienasgramata',
             kavejumi: isTeacher ? '/TeacherAbsences' : '/kavejumi',
             atzimes: isTeacher ? '/TeacherAbsences' : '/atzimes',

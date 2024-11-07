@@ -34,8 +34,8 @@ class AuthenticatedSessionController extends Controller
     $request->session()->regenerate();
 
     $redirectUrl = Auth::user()->role === 'admin'
-        ? route('teacher.dashboard')    // for teachers
-        : route('dienasgramata.index'); // for regular users
+        ? route('teacher.classes.index')    
+        : route('dienasgramata.index'); 
 
     return redirect()->intended($redirectUrl);
 }

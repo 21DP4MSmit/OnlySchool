@@ -25,7 +25,6 @@ services:
             - mysql
             - redis
             - laravel-echo-server
-
     mysql:
         image: 'mysql:8.1'
         ports:
@@ -50,7 +49,6 @@ services:
                 - '-p${DB_PASSWORD}'
             retries: 3
             timeout: 5s
-
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
         links:
@@ -65,20 +63,18 @@ services:
             - sail
         depends_on:
             - mysql
-
     redis:
-        image: redis:alpine
+        image: 'redis:alpine'
         ports:
             - '6379:6379'
         networks:
             - sail
-
     laravel-echo-server:
-        image: node:current-alpine
+        image: 'node:current-alpine'
         working_dir: /app
         volumes:
             - '.:/app'
-        command: npx laravel-echo-server start
+        command: 'npx laravel-echo-server start'
         ports:
             - '6001:6001'
         environment:
@@ -87,11 +83,9 @@ services:
             - redis
         networks:
             - sail
-
 networks:
     sail:
         driver: bridge
-
 volumes:
     sail-mysql:
         driver: local
