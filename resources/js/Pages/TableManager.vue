@@ -1,12 +1,12 @@
 <template>
     <div class="container mx-auto py-8 px-4">
-        <h1 class="text-3xl font-bold text-center mb-6">Table Manager</h1>
+        <h1 class="text-3xl font-bold text-center mb-6">Admin lapa</h1>
 
         <!-- Select Table -->
         <div class="max-w-xl mx-auto mb-8">
-            <label for="tableSelect" class="block text-lg font-medium text-gray-700 mb-2">Select a Table:</label>
+            <label for="tableSelect" class="block text-lg font-medium text-gray-700 mb-2">Izvēlies tabulu:</label>
             <select v-model="selectedTable" @change="fetchTableData" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4">
-                <option value="" disabled>Select a table</option>
+                <option value="" disabled>Izvēlies tabulu</option>
                 <option v-for="table in tables" :key="table" :value="table">
                     {{ table }}
                 </option>

@@ -10,7 +10,6 @@ import Pusher from "pusher-js";
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
-const appName = import.meta.env.VITE_APP_NAME;
 
 window.Pusher = Pusher;
 
@@ -27,7 +26,7 @@ window.Echo = new Echo({
 });
 
 createInertiaApp({
-    title: (title) => `${title} - ${appName}`,
+    title: (title) => `${title}`,
     resolve: (name) =>
         resolvePageComponent(
             `./Pages/${name}.vue`,

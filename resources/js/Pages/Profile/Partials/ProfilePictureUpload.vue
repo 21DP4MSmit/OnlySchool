@@ -1,9 +1,14 @@
 <template>
     <div>
-      <label for="profile_picture" class="block text-sm font-medium text-gray-700">Profile Picture</label>
+      <label for="profile_picture" class="block text-sm font-medium text-gray-700">Profila attēls</label>
       
       <div class="mt-2 flex items-center">
-        <img v-if="currentPicture" :src="currentPicture" alt="Profile Picture" class="h-16 w-16 rounded-full object-cover" />
+        <img
+          v-if="currentPicture"
+          :src="currentPicture"
+          alt="Profile Picture"
+          class="h-16 w-16 rounded-full object-cover mr-4"
+        />
         
         <input
           ref="fileInput"
@@ -14,13 +19,13 @@
           accept="image/*"
         />
         
-        <button
-          type="button"
+        <PrimaryButton
+          :disabled="form.processing"
           @click="chooseFile"
-          class="ml-5 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          class="ml-4"
         >
-          Choose Picture
-        </button>
+          Izvēlies attēlu
+        </PrimaryButton>
       </div>
   
       <div v-if="status" class="mt-2 text-sm text-green-600">{{ status }}</div>
@@ -30,6 +35,7 @@
   <script setup>
   import { ref } from 'vue';
   import { useForm } from '@inertiajs/vue3';
+  import PrimaryButton from '@/Components/PrimaryButton.vue';
   
   const form = useForm({
     profile_picture: null, // Holds the file object
@@ -52,7 +58,7 @@
     form.post(route('profile.picture.update'), {
       forceFormData: true, // Make sure form data is sent as FormData (for file upload)
       onSuccess: () => {
-        status.value = 'Profile picture updated successfully!';
+        status.value = 'Profila attēls ir veiksmīgi atjaunināts!';
       },
       onError: (errors) => {
         console.log(errors);
