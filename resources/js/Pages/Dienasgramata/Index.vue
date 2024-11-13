@@ -48,7 +48,7 @@
                 <td class="py-4 px-6">{{ index + 1 }}</td>
                 <td class="py-4 px-6">{{ getTimeForLesson(index) }}</td>
                 <td class="py-4 px-6">
-                  <span class="font-bold text-blue-600">{{ subjectList.subject.Name }}</span><br>
+                  <span class="font-bold text-gray-900">{{ subjectList.subject.Name }}</span><br>
                   <span class="text-gray-500">Klase: {{ subjectList.classroom.Classroom }}</span>
                 </td>
                 <td class="py-4 px-6 truncate max-w-xs">{{ subjectList.topic || 'Tēma nav pieejama' }}</td>
