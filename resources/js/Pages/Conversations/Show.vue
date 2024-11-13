@@ -54,7 +54,7 @@
                                 <!-- Image Attachments -->
                                 <div v-if="isImage(attachment)" class="cursor-pointer">
                                     <img 
-                                        :src="`/storage/${attachment}`" 
+                                        :src="attachment" 
                                         class="w-16 h-16 object-cover" 
                                         @click="openImageModal(i, message.attachments)"
                                     />
@@ -64,7 +64,7 @@
                                     <img :src="fileIcon" class="w-8 h-8 object-cover" />
                                     <div class="flex-grow">
                                         <a 
-                                            :href="`/storage/${attachment}`" 
+                                            :href="attachment" 
                                             target="_blank" 
                                             class="text-blue-600 hover:underline break-all"
                                         >
@@ -72,7 +72,7 @@
                                         </a>
                                         <p class="text-sm text-gray-500">Document</p>
                                     </div>
-                                    <a :href="`/storage/${attachment}`" download class="text-blue-500 hover:text-blue-700">
+                                    <a :href="attachment" download class="text-blue-500 hover:text-blue-700">
                                         <img :src="downloadIcon" class="w-5 h-5" />
                                     </a>
                                 </div>
@@ -183,7 +183,9 @@
 
                 <!-- Fullscreen image -->
                 <div class="relative">
-                    <img :src="`/storage/${expandedImages[expandedImageIndex]}`" class="max-w-screen-lg max-h-screen object-contain" />
+                    <div class="relative">
+                        <img :src="expandedImages[expandedImageIndex]" class="max-w-screen-lg max-h-screen object-contain" />
+                    </div>
 
                     <!-- Previous and Next arrows -->
                     <button @click="prevImage" v-if="expandedImageIndex > 0" class="absolute left-0 text-white text-3xl">
@@ -197,7 +199,7 @@
                 <!-- Thumbnail preview at the bottom -->
                 <div class="absolute bottom-4 flex space-x-2">
                     <div v-for="(img, index) in expandedImages" :key="index" @click="expandedImageIndex = index" class="cursor-pointer">
-                        <img :src="`/storage/${img}`" class="w-16 h-16 object-cover border border-gray-300" />
+                        <img :src="img" class="w-16 h-16 object-cover border border-gray-300" />
                     </div>
                 </div>
             </div>
@@ -284,6 +286,20 @@ export default {
                 },
             });
         },
+        parseAttachments(attachments) {
+            // Ensure attachments are parsed only if they are a JSON string
+            if (typeof attachments === 'string') {
+                try {
+                    attachments = JSON.parse(attachments);
+                } catch (e) {
+                    console.error("Failed to parse attachments:", e);
+                    attachments = [];
+                }
+            }
+            return attachments.map(attachment => {
+                return attachment.startsWith('/storage') ? attachment : `/storage/${attachment}`;
+            });
+        },
         removeParticipant(userId) {
             this.$inertia.post(route('conversations.remove-participant', this.conversation.id), { user_id: userId }, {
                 onSuccess: () => {
@@ -309,7 +325,7 @@ export default {
             this.participantsVisible = false;
         },
         openImageModal(index, attachments) {
-            const parsedAttachments = Array.isArray(attachments) ? attachments : this.parseAttachments(attachments);
+            const parsedAttachments = this.parseAttachments(attachments);
             this.expandedImages = parsedAttachments.filter(this.isImage);
             this.expandedImageIndex = index;
         },
@@ -319,11 +335,12 @@ export default {
         },
         isImage(file) {
             const imageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
-            const extension = file.name
-                ? file.name.split('.').pop().toLowerCase()
-                : file.split('.').pop().toLowerCase();
+            const extension = typeof file === 'string'
+                ? file.split('.').pop().toLowerCase()
+                : file.name.split('.').pop().toLowerCase();
             return imageExtensions.includes(extension);
         },
+
         formatTimestamp(timestamp) {
             return format(new Date(timestamp), 'PPpp');
         },
