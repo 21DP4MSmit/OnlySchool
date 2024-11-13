@@ -49,9 +49,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/dienasgramata', [DienasgramataController::class, 'index'])->name('dienasgramata.index');
 
-        Route::get('/kavejumi', function () {
-            return Inertia::render('Kavejumi');
-        });
+        Route::get('/kavejumi', [AbsenceController::class, 'index'])->name('kavejumi.index');
 
         Route::get('/atzimes', function () {
             return Inertia::render('Atzimes');

@@ -10,4 +10,14 @@ class Absence extends Model
     use HasFactory;
 
     protected $fillable = ['UserID', 'SubjectID', 'Absence', 'date'];
+    public function subject()
+{
+    return $this->belongsTo(Subject::class, 'SubjectID', 'SubjectID');
+}
+
+public function classroom()
+{
+    return $this->belongsTo(Classroom::class, 'ClassroomID', 'id');
+}
+
 }
