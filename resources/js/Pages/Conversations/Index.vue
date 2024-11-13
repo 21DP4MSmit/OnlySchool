@@ -1,62 +1,79 @@
 <template>
     <AuthenticatedLayout>
-        <div class="max-w-5xl mx-auto py-10">
-            <h1 class="text-3xl font-bold mb-6">Saziņa</h1>
+        <div class="max-w-5xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-900">Saziņa</h1>
+                <button 
+                    @click="createNewConversation"
+                    class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transform transition duration-150 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                >
+                    Jauna sarakste
+                </button>
+            </div>
 
-            <!-- Button to create a new conversation -->
-            <button 
-                @click="createNewConversation"
-                class="mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300"
-            >
-                Jauna sarakste
-            </button>
-
-            <!-- Search Bar -->
-            <div class="mb-4">
+            <div class="relative mb-6">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                    </svg>
+                </div>
                 <input 
                     v-model="searchQuery"
                     type="text"
-                    placeholder="Search conversations..."
-                    class="w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500"
+                    placeholder="Meklēt..."
+                    class="w-full pl-10 rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
                 />
             </div>
 
-            <!-- Conversations list -->
-            <div ref="conversationContainer" class="space-y-4 max-h-96 overflow-y-auto border border-gray-300 rounded-lg p-4">
-                <ul>
+            <div ref="conversationContainer" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <ul class="divide-y divide-gray-200">
                     <li 
                         v-for="conversation in paginatedConversations" 
                         :key="conversation.id" 
-                        class="bg-white shadow-md rounded-lg p-4 flex justify-between items-center relative" 
-                        :class="{'bg-gray-100': hasUnreadMessages(conversation)}"
+                        class="hover:bg-gray-50/80 transition-all duration-200"
+                        :class="{
+                            'bg-blue-50/70': hasUnreadMessages(conversation),
+                            'border-l-4 border-purple-400': isGroupChat(conversation),
+                            'border-l-4 border-emerald-400': !isGroupChat(conversation)
+                        }"
                     >
-                        <div class="flex-1">
-                            <Link :href="route('conversations.show', conversation.id)" class="text-xl font-semibold text-gray-900 hover:text-blue-500 transition duration-300">
-                                <!-- Display the other participant's name if one-on-one, otherwise show the subject -->
-                                {{ isGroupChat(conversation) ? (conversation.subject || 'Conversation') : getOtherParticipantName(conversation) }}
-                            </Link>
-                            
-                            <!-- Remove participants display for one-on-one -->
-                            <p v-if="isGroupChat(conversation)" class="text-gray-600 text-sm">
-                                {{ getParticipants(conversation) }}
-                            </p>
-                            
-                            <!-- Display the latest message timestamp -->
-                            <p class="text-gray-500 text-xs">
-                                Pēdēja ziņa: {{ formatTimestamp(getLatestMessage(conversation).created_at) }}
-                            </p>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start">
+                                <div class="flex-1 min-w-0">
+                                    <Link 
+                                        :href="route('conversations.show', conversation.id)" 
+                                        class="group flex items-center space-x-2 text-lg font-semibold text-gray-900 hover:text-blue-600 transition duration-150"
+                                    >
+                                        <!-- Group Chat Icon -->
+                                        <span v-if="isGroupChat(conversation)" class="flex items-center justify-center w-8 h-8 rounded-lg bg-purple-100 text-purple-600 group-hover:bg-purple-200 transition-colors duration-200">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                            </svg>
+                                        </span>
+                                        <!-- Individual Chat Icon -->
+                                        <span v-else class="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 group-hover:bg-emerald-200 transition-colors duration-200">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                            </svg>
+                                        </span>
+                                        <span>{{ isGroupChat(conversation) ? (conversation.subject || 'Group Chat') : getOtherParticipantName(conversation) }}</span>
+                                    </Link>
+                                    
+                                    <p v-if="isGroupChat(conversation)" class="mt-1 text-sm text-gray-500 pl-10">
+                                        {{ getParticipants(conversation) }}
+                                    </p>
+                                    
+                                    <p class="mt-2 text-sm text-gray-400 pl-10">
+                                        Pēdēja ziņa: {{ formatTimestamp(getLatestMessage(conversation).created_at) }}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
-
-                        <!-- Delete Button -->
-                        <button @click="deleteConversation(conversation.id)" class="text-red-500 hover:text-red-700">
-                            Delete
-                        </button>
                     </li>
                 </ul>
-
-                <!-- Infinite scroll loading trigger -->
-                <div ref="loadMoreTrigger" v-if="hasMoreConversations" class="text-center py-4 text-gray-500">
-                    Loading more conversations...
+                <div ref="loadMoreTrigger" v-if="hasMoreConversations" 
+                     class="text-center py-6 bg-gray-50 text-gray-500">
+                    <div class="animate-pulse">Lādē vēl saziņas...</div>
                 </div>
             </div>
         </div>
