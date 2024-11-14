@@ -22,6 +22,7 @@ Running after install:
 
     ./vendor/bin/sail npm run dev
 
-TAS KAS FUCKUPOS GITHUBU WILL GET 100 WHIPS
 
-https://docs.google.com/document/d/1myH4F2vpxhE6_JgNZ4QHtP1J4gs8tMNE-lZiseNr_LY/edit?tab=t.0
+http://www.onlyschool.id.lv/
+
+https://docs.google.com/document/d/1myH4F2vpxhE6_JgNZ4QHtP1J4gs8tMNE-lZiseNr_LY/edit?usp=sharing
