@@ -1,36 +1,43 @@
 <template>
-    <div>
-      <label for="profile_picture" class="block text-sm font-medium text-gray-700">Profila attēls</label>
-      
-      <div class="mt-2 flex items-center">
-        <img
-          v-if="currentPicture"
-          :src="currentPicture"
-          alt="Profile Picture"
-          class="h-16 w-16 rounded-full object-cover mr-4"
-        />
-        
-        <input
-          ref="fileInput"
-          type="file"
-          id="profile_picture"
-          class="hidden"
-          @change="uploadPicture"
-          accept="image/*"
-        />
-        
-        <PrimaryButton
-          :disabled="form.processing"
-          @click="chooseFile"
-          class="ml-4"
-        >
-          Izvēlies attēlu
-        </PrimaryButton>
+  <div class="space-y-4">
+    <div class="flex flex-col items-center">
+      <img
+        v-if="currentPicture"
+        :src="currentPicture"
+        alt="Profile Picture"
+        class="h-32 w-32 rounded-full object-cover ring-4 ring-white shadow-lg"
+      />
+      <div v-else class="h-32 w-32 rounded-full bg-gray-200 flex items-center justify-center">
+        <span class="text-4xl text-gray-400">👤</span>
       </div>
-  
-      <div v-if="status" class="mt-2 text-sm text-green-600">{{ status }}</div>
+      
+      <input
+        ref="fileInput"
+        type="file"
+        id="profile_picture"
+        class="hidden"
+        @change="uploadPicture"
+        accept="image/*"
+      />
+      
+      <PrimaryButton
+        :disabled="form.processing"
+        @click="chooseFile"
+        class="mt-4"
+      >
+        <span v-if="currentPicture">Mainīt attēlu</span>
+        <span v-else>Pievienot attēlu</span>
+      </PrimaryButton>
     </div>
-  </template>
+    
+    <div 
+      v-if="status" 
+      class="mt-2 rounded-md bg-green-50 p-3 text-sm text-green-600 text-center"
+    >
+      {{ status }}
+    </div>
+  </div>
+</template>
   
   <script setup>
   import { ref } from 'vue';
