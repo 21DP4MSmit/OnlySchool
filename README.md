@@ -4,12 +4,14 @@ Lai runnotu
 
 pull from git
 do:
-    npm install
-    composer install
-
-After do:
-    php artisan serve
-    npm run dev
+    composer i
+    ./vendor/bin/sail up -d
+    ./vendor/bin/sail npm ci
+    ./vendor/bin/sail artisan migrate
+    ./vedor/bin/sail npm run dev
+Running after install:
+    ./vendor/bin/sail up -d
+    ./vendor/bin/sail npm run dev
 
 TAS KAS FUCKUPOS GITHUBU WILL GET 100 WHIPS
 
