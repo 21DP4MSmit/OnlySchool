@@ -184,7 +184,7 @@ const isTeacher = computed(() => page.props.auth.user.role === 'admin');
 
 // Base URLs
 const urls = computed(() => ({
-    home: isTeacher.value ? '/TeacherClasses' : '/TeacherClasses',
+    home: isTeacher.value ? '/TeacherClasses' : '/dashboard',
     dienasgramata: '/dienasgramata',
     kavejumi: '/kavejumi',
     atzimes: '/atzimes',
