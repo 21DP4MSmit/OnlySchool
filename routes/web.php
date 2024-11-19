@@ -8,7 +8,7 @@ use App\Http\Controllers\TableController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\MessageController;
 use App\Http\Middleware\RoleMiddleware;
-use App\Http\Controllers\StudentDashboardController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -70,11 +70,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/profile-picture', [ProfileController::class, 'updateProfilePicture'])->name('profile.picture.update');
         Route::get('/profile-picture', [ProfileController::class, 'getProfilePicture'])->name('profile.picture');
 
-        Route::get('/api/timetable/today', [StudentDashboardController::class, 'getTodayTimetable'])->name('timetable.today');
 
-        Route::get('/api/grades/recent', [StudentDashboardController::class, 'getRecentGrades'])->name('grades.recent');
-
-        Route::get('/api/absences/monthly', [StudentDashboardController::class, 'getMonthlyAbsences'])->name('absences.monthly');
+        Route::middleware('auth:sanctum')->get('/timetable/today', [DashboardController::class, 'getTodayTimetable']);
+        Route::middleware('auth:sanctum')->get('/marks/today', [DashboardController::class, 'getTodayMarks']);
+        Route::middleware('auth:sanctum')->get('/absences/today', [DashboardController::class, 'getTodayAbsences']);
 
     });
 

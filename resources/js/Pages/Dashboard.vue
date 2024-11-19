@@ -97,7 +97,7 @@ export default {
   mounted() {
     this.updateCurrentDate();
     this.fetchData();
-  },
+},
   methods: {
     updateCurrentDate() {
       const today = new Date();
@@ -108,35 +108,37 @@ export default {
       });
     },
     fetchData() {
-      // Fetch today's timetable
-      axios
-        .get('/api/timetable/today')
-        .then(response => {
-          this.todayTimetable = response.data;
-        })
-        .catch(() => {
-          this.todayTimetable = [];
-        });
+  axios.get('/api/timetable/today')
+    .then(response => {
+      console.log('API Response for todayTimetable:', response.data);
+      this.todayTimetable = response.data; // Make sure this matches the expected structure
+    })
+    .catch(error => {
+      console.error('Error fetching timetable data:', error);
+      this.todayTimetable = [];
+    });
 
-      // Fetch recent marks
-      axios
-        .get('/api/marks/recent')
-        .then(response => {
-          this.recentMarks = response.data;
-        })
-        .catch(() => {
-          this.recentMarks = [];
-        });
+       // Similarly for other API endpoints
+  axios.get('/api/marks/recent')
+    .then(response => {
+      console.log('API Response for recentMarks:', response.data);
+      this.recentMarks = response.data;
+    })
+    .catch(error => {
+      console.error('Error fetching marks data:', error);
+      this.recentMarks = [];
+    });
 
-      // Fetch monthly absences
-      axios
-        .get('/api/absences/monthly')
-        .then(response => {
-          this.monthlyAbsences = response.data;
-        })
-        .catch(() => {
-          this.monthlyAbsences = [];
-        });
+
+    axios.get('/api/absences/monthly')
+    .then(response => {
+      console.log('API Response for monthlyAbsences:', response.data);
+      this.monthlyAbsences = response.data;
+    })
+    .catch(error => {
+      console.error('Error fetching absences data:', error);
+      this.monthlyAbsences = [];
+    });
     },
     getTimeForLesson(index) {
       return this.lessonTimes[index] || '...';
