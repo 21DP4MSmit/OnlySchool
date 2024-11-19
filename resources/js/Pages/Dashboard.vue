@@ -94,6 +94,10 @@ export default {
       ],
     };
   },
+  mounted() {
+    this.updateCurrentDate();
+    this.fetchData();
+  },
   methods: {
     updateCurrentDate() {
       const today = new Date();
@@ -140,10 +144,6 @@ export default {
     convertTextWithLinks(text) {
       return text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-blue-500 hover:underline">$1</a>');
     },
-  },
-  mounted() {
-    this.updateCurrentDate();
-    this.fetchData();
   },
 };
 </script>
