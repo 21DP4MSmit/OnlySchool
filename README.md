@@ -14,7 +14,7 @@ do:
 
     ./vendor/bin/sail artisan migrate
 
-    ./vedor/bin/sail npm run dev
+    ./vendor/bin/sail npm run dev
 
 Running after install:
 
