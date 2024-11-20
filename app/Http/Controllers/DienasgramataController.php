@@ -121,8 +121,6 @@ public function todayClasses(Request $request)
 
 public function teacherDashboard(Request $request)
 {
-    // Fetch the classes data you want for the dashboard, such as today’s classes
-    // Adjust this as necessary based on your data requirements
     $userId = Auth::user()->id;
     $today = Carbon::today();
 

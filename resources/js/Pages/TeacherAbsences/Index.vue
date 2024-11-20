@@ -65,7 +65,7 @@
                     <h3 class="text-xl font-bold mb-4">Mark Absences for {{ selectedSubject.subject?.Name }}</h3>
 
                     <div class="mb-4">
-                        <label class="block text-gray-700">Class:</label>
+                        <label class="block text-gray-700">Klase</label>
                         <input type="text" :value="selectedSubject.classroom?.Classroom || 'N/A'" class="w-full border border-gray-300 rounded-md p-2" readonly />
                     </div>
 
