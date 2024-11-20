@@ -3,30 +3,60 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Timetable;  // Import models if needed
-use App\Models\Mark;  // Assuming you have a Mark model
-use App\Models\Absence;  // Assuming you have an Absence model
+use Illuminate\Support\Facades\Auth;
+use App\Models\SubjectList;
+use App\Models\Mark;
+use App\Models\Absence;
+use Carbon\Carbon;
+use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
-    // Fetch today's timetable
-    public function getTodayTimetable()
+    public function index()
     {
-        $timetable = Timetable::whereDate('date', today())->get();  // Assuming the model has a 'date' column
-        return response()->json($timetable);
-    }
+        $user = Auth::user();
+        $classId = $user->class_id;
+        $today = Carbon::today();
 
-    // Fetch recent marks
-    public function getRecentMarks()
-    {
-        $marks = Mark::latest()->take(5)->get();  // Example: Get the latest 5 marks
-        return response()->json($marks);
-    }
+        // Fetch today's timetable
+        $todayTimetable = SubjectList::where('ClassID', $classId)
+            ->whereDate('Date', $today)
+            ->with('subject', 'classroom')
+            ->get();
 
-    // Fetch monthly absences
-    public function getMonthlyAbsences()
-    {
-        $absences = Absence::whereMonth('date', now()->month)->get();  // Get absences for the current month
-        return response()->json($absences);
+        // Fetch recent grades
+        $recentGrades = Mark::where('UserID', $user->id)
+            ->with('subject')
+            ->orderBy('date', 'desc')
+            ->limit(3)
+            ->get();
+
+        // Fetch recent absences
+        $recentAbsences = Absence::where('UserID', $user->id)
+            ->with('subject')
+            ->orderBy('date', 'desc')
+            ->limit(3)
+            ->get();
+
+        // Calculate average grade for the current month
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+
+        $marks = Mark::where('UserID', $user->id)
+            ->whereMonth('date', $currentMonth)
+            ->whereYear('date', $currentYear)
+            ->pluck('mark')
+            ->filter(function ($value) {
+                return is_numeric($value);
+            });
+
+        $averageGrade = $marks->count() > 0 ? $marks->avg() : 0;
+
+        return Inertia::render('Dashboard', [
+            'todayTimetable' => $todayTimetable,
+            'recentGrades' => $recentGrades,
+            'recentAbsences' => $recentAbsences,
+            'averageGrade' => $averageGrade,
+        ]);
     }
 }

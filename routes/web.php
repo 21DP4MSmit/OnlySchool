@@ -43,17 +43,14 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware([RoleMiddleware::class.':user,admin'])->group(function () {
 
-        Route::get('/dashboard', function () {
-            return Inertia::render('Dashboard');
-        })->name('dashboard');
+        // Route::get('/dashboard', function () {
+        //     return Inertia::render('Dashboard');
+        // })->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         Route::get('/dienasgramata', [DienasgramataController::class, 'index'])->name('dienasgramata.index');
 
         Route::get('/kavejumi', [AbsenceController::class, 'index'])->name('kavejumi.index');
-
-        // Route::get('/atzimes', function () {
-        //     return Inertia::render('Atzimes');
-        // });
 
         Route::get('/atzimes', [UserController::class, 'grades'])->name('atzimes');
 
