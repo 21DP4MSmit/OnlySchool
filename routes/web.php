@@ -27,7 +27,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/table-manager/insert-user', [TableController::class, 'insertUser'])->name('table.insert.user');
         Route::get('/users-by-class/{class_id}', [UserController::class, 'getUsersByClass']);
         Route::get('/user-by-class/{classId}', [UserController::class, 'getUserByClass']);
-        Route::post('/save-absences', [\App\Http\Controllers\AbsenceController::class, 'saveAbsences']);
+        Route::post('/save-absences', [AbsenceController::class, 'saveAbsences']);
 
 
         
