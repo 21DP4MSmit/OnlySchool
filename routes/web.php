@@ -51,9 +51,12 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/kavejumi', [AbsenceController::class, 'index'])->name('kavejumi.index');
 
-        Route::get('/atzimes', function () {
-            return Inertia::render('Atzimes');
-        });
+        // Route::get('/atzimes', function () {
+        //     return Inertia::render('Atzimes');
+        // });
+
+        Route::get('/atzimes', [UserController::class, 'grades'])->name('atzimes');
+
 
         Route::resource('conversations', ConversationController::class);
         Route::post('conversations/{conversation}/messages', [MessageController::class, 'store'])->name('messages.store');
@@ -71,9 +74,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/profile-picture', [ProfileController::class, 'getProfilePicture'])->name('profile.picture');
 
 
-        Route::middleware('auth:sanctum')->get('/timetable/today', [DashboardController::class, 'getTodayTimetable']);
-        Route::middleware('auth:sanctum')->get('/marks/today', [DashboardController::class, 'getTodayMarks']);
-        Route::middleware('auth:sanctum')->get('/absences/today', [DashboardController::class, 'getTodayAbsences']);
+        Route::get('/timetable/today', [DashboardController::class, 'getTodayTimetable']);
+        Route::get('/marks/today', [DashboardController::class, 'getTodayMarks']);
+        Route::get('/absences/today', [DashboardController::class, 'getTodayAbsences']);
 
     });
 

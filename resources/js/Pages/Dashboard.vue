@@ -3,7 +3,7 @@
     <div class="container mx-auto px-4 py-8">
       <!-- Header with current date -->
       <div class="flex justify-between items-center mb-8">
-        <h1 class="text-4xl font-extrabold text-gray-900">Studentu lapa</h1>
+        <h1 class="text-4xl font-extrabold text-gray-900"></h1>
         <span class="text-lg font-semibold text-gray-600 bg-gray-200 py-2 px-4 rounded-lg shadow-sm">
           {{ currentDate }} (Šodien)
         </span>
@@ -50,7 +50,7 @@
 
       <!-- Recent Grades -->
       <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
-        <h3 class="text-3xl font-semibold text-gray-800 mb-4">Recent Marks:</h3>
+        <h3 class="text-3xl font-semibold text-gray-800 mb-4">Jaunākās atzīmes:</h3>
         <ul>
         <li v-for="marks in recentMarks" :key="mark.id" class="mb-2">
           {{ marks.subject }} - {{ marks.marks }} ({{ marks.date }})
@@ -61,7 +61,7 @@
 
       <!-- Monthly Absences -->
       <div class="bg-white p-6 rounded-lg shadow-lg">
-        <h3 class="text-3xl font-semibold text-gray-800 mb-4">Monthly Absences:</h3>
+        <h3 class="text-3xl font-semibold text-gray-800 mb-4">Kavējumi:</h3>
         <ul>
           <li v-for="absence in monthlyAbsences" :key="absence.id" class="mb-2">
             {{ absence.date }} - {{ absence.reason }}
