@@ -15,7 +15,7 @@
                         <div class="flex items-center">
                             <!-- Logo and title -->
                             <a :href="urls.home" class="flex items-center cursor-pointer group">
-                                <ApplicationLogo class="block h-12 w-auto fill-current text-white transition-transform duration-300 group-hover:scale-110" />
+                                <ApplicationLogo class="block h-14 w-auto fill-current text-white transition-transform duration-300 group-hover:scale-110" />
                                 <h1 class="text-2xl font-bold ms-4 leading-7 tracking-wide">
                                     OnlySchool
                                     <span class="block text-xs text-blue-200 font-normal">School Management System</span>
